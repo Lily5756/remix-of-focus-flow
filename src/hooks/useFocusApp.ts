@@ -62,19 +62,38 @@ export function useFocusApp() {
     [tasks]
   );
 
-  const addTask = useCallback((text: string) => {
+  const addTask = useCallback((text: string, scheduledDate: string | null = null) => {
     const newTask: Task = {
       id: generateId(),
       text: text.trim(),
       completedPomodoros: 0,
       isCompleted: false,
       createdAt: Date.now(),
+      scheduledDate,
     };
     setTasks(prev => [newTask, ...prev]);
-    setActiveTaskId(newTask.id);
-    setPreferences(prev => ({ ...prev, lastActiveTaskId: newTask.id }));
+    if (!scheduledDate) {
+      setActiveTaskId(newTask.id);
+      setPreferences(prev => ({ ...prev, lastActiveTaskId: newTask.id }));
+    }
     return newTask;
   }, [setTasks, setPreferences]);
+
+  const updateTaskDate = useCallback((taskId: string, scheduledDate: string | null) => {
+    setTasks(prev => prev.map(t => 
+      t.id === taskId ? { ...t, scheduledDate } : t
+    ));
+  }, [setTasks]);
+
+  const deleteTask = useCallback((taskId: string) => {
+    setTasks(prev => prev.filter(t => t.id !== taskId));
+    if (activeTaskId === taskId) {
+      setActiveTaskId(null);
+      setPreferences(prev => ({ ...prev, lastActiveTaskId: null }));
+    }
+  }, [activeTaskId, setTasks, setPreferences]);
+
+  const allTasks = useMemo(() => tasks, [tasks]);
 
   const selectTask = useCallback((taskId: string) => {
     setActiveTaskId(taskId);
@@ -198,6 +217,7 @@ export function useFocusApp() {
   return {
     // State
     tasks: incompleteTasks,
+    allTasks,
     activeTask,
     activeTaskId,
     selectedDuration,
@@ -210,6 +230,8 @@ export function useFocusApp() {
     addTask,
     selectTask,
     completeTask,
+    deleteTask,
+    updateTaskDate,
     updateDuration,
     startSession,
     submitReflection,

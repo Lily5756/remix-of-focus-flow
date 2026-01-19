@@ -8,16 +8,16 @@ import { ReflectionModal } from '@/components/focus/ReflectionModal';
 import { StreakDisplay } from '@/components/focus/StreakDisplay';
 import { Encouragement } from '@/components/focus/Encouragement';
 import { ThemeToggle } from '@/components/focus/ThemeToggle';
-import { TabNavigation } from '@/components/focus/TabNavigation';
+import { TabNavigation, Tab } from '@/components/focus/TabNavigation';
 import { CalendarView } from '@/components/focus/CalendarView';
-
-type Tab = 'focus' | 'calendar';
+import { TasksView } from '@/components/focus/TasksView';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
   
   const {
     tasks,
+    allTasks,
     activeTask,
     selectedDuration,
     timer,
@@ -27,6 +27,8 @@ export default function Index() {
     addTask,
     selectTask,
     completeTask,
+    deleteTask,
+    updateTaskDate,
     updateDuration,
     startSession,
     submitReflection,
@@ -35,6 +37,10 @@ export default function Index() {
   } = useFocusApp();
 
   const isTimerActive = timer.state !== 'idle';
+
+  const handleTabChange = (tab: Tab) => {
+    setActiveTab(tab);
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
@@ -50,11 +56,11 @@ export default function Index() {
 
       {/* Tab Navigation */}
       <div className="flex justify-center pb-4">
-        <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
 
       {/* Content */}
-      {activeTab === 'focus' ? (
+      {activeTab === 'focus' && (
         <main className="flex-1 flex flex-col items-center justify-center px-4 pb-8 -mt-4">
           <div className="mb-8">
             <TimerDisplay
@@ -76,7 +82,7 @@ export default function Index() {
             <TaskInput
               tasks={tasks}
               activeTask={activeTask}
-              onAddTask={addTask}
+              onAddTask={(text) => addTask(text, null)}
               onSelectTask={selectTask}
               onCompleteTask={completeTask}
               disabled={isTimerActive}
@@ -93,7 +99,21 @@ export default function Index() {
             onSkipBreak={timer.skipBreak}
           />
         </main>
-      ) : (
+      )}
+
+      {activeTab === 'tasks' && (
+        <main className="flex-1 flex flex-col pb-8">
+          <TasksView
+            tasks={allTasks}
+            onAddTask={addTask}
+            onCompleteTask={completeTask}
+            onDeleteTask={deleteTask}
+            onUpdateTaskDate={updateTaskDate}
+          />
+        </main>
+      )}
+
+      {activeTab === 'calendar' && (
         <main className="flex-1 flex flex-col px-2 pb-8">
           <CalendarView />
         </main>

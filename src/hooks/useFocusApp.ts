@@ -29,7 +29,8 @@ export function useFocusApp() {
   });
   const [streakData, setStreakData] = useLocalStorage<StreakData>('focus-streak', {
     currentStreak: 0,
-    lastActiveDate: '',
+    longestStreak: 0,
+    lastStreakDate: '',
     todaySessionCount: 0,
   });
   
@@ -193,19 +194,26 @@ export function useFocusApp() {
       let newStreak = prev.currentStreak;
       let newTodayCount = prev.todaySessionCount;
       
-      if (prev.lastActiveDate === today) {
+      if (prev.lastStreakDate === today) {
+        // Same day - just increment session count
         newTodayCount += 1;
-      } else if (prev.lastActiveDate === yesterdayStr) {
+      } else if (prev.lastStreakDate === yesterdayStr) {
+        // Consecutive day - increment streak
         newStreak += 1;
         newTodayCount = 1;
-      } else if (prev.lastActiveDate !== today) {
+      } else {
+        // Missed a day or first session ever - reset streak to 1
         newStreak = 1;
         newTodayCount = 1;
       }
       
+      // Update longest streak if current exceeds it
+      const newLongestStreak = Math.max(prev.longestStreak, newStreak);
+      
       return {
         currentStreak: newStreak,
-        lastActiveDate: today,
+        longestStreak: newLongestStreak,
+        lastStreakDate: today,
         todaySessionCount: newTodayCount,
       };
     });

@@ -20,6 +20,7 @@ export interface UserPreferences {
   preferredDuration: number;
   lastActiveTaskId: string | null;
   lastSessionDurations: number[];
+  userName: string | null;
 }
 
 export interface StreakData {

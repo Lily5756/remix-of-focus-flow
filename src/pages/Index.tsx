@@ -123,7 +123,11 @@ export default function Index() {
       {/* Header with profile, streak and theme toggle */}
       <header className="pt-6 pb-2 px-4 flex items-center justify-between">
         <button 
-          onClick={() => setShowAvatarSelector(true)}
+          type="button"
+          onClick={() => {
+            console.log('Avatar button clicked');
+            setShowAvatarSelector(true);
+          }}
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
           <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center overflow-hidden border-2 border-transparent hover:border-foreground/20 transition-colors">

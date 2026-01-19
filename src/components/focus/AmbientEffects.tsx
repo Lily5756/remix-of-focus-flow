@@ -22,16 +22,16 @@ function generateParticles(count: number): Particle[] {
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    duration: Math.random() * 15 + 10,
-    delay: Math.random() * 5,
-    opacity: Math.random() * 0.3 + 0.1,
+    size: Math.random() * 8 + 4, // Bigger particles (4-12px)
+    duration: Math.random() * 20 + 15,
+    delay: Math.random() * 8,
+    opacity: Math.random() * 0.4 + 0.2, // Higher opacity (0.2-0.6)
   }));
 }
 
 // Cozy Mode: Floating dust motes in warm sunlight
 function CozyParticles() {
-  const particles = useMemo(() => generateParticles(12), []);
+  const particles = useMemo(() => generateParticles(20), []); // More particles
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -44,7 +44,8 @@ function CozyParticles() {
             top: `${p.y}%`,
             width: `${p.size}px`,
             height: `${p.size}px`,
-            background: `hsl(35 60% 70% / ${p.opacity})`,
+            background: `radial-gradient(circle, hsl(35 70% 65% / ${p.opacity}) 0%, hsl(30 60% 55% / ${p.opacity * 0.5}) 100%)`,
+            boxShadow: `0 0 ${p.size * 2}px hsl(35 60% 60% / ${p.opacity * 0.6})`,
             animationDuration: `${p.duration}s`,
             animationDelay: `${p.delay}s`,
           }}
@@ -93,7 +94,7 @@ function LockedInPulse({ isActive }: { isActive?: boolean }) {
 
 // Fresh Start Mode: Gentle floating bubbles/orbs
 function FreshBubbles() {
-  const bubbles = useMemo(() => generateParticles(8), []);
+  const bubbles = useMemo(() => generateParticles(15), []); // More bubbles
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -104,9 +105,10 @@ function FreshBubbles() {
           style={{
             left: `${p.x}%`,
             bottom: `-${p.size * 2}px`,
-            width: `${p.size * 3}px`,
-            height: `${p.size * 3}px`,
-            background: `radial-gradient(circle at 30% 30%, hsl(175 40% 80% / ${p.opacity + 0.1}), hsl(190 30% 70% / ${p.opacity * 0.5}))`,
+            width: `${p.size * 2.5}px`,
+            height: `${p.size * 2.5}px`,
+            background: `radial-gradient(circle at 30% 30%, hsl(175 50% 75% / ${p.opacity + 0.15}), hsl(190 40% 65% / ${p.opacity * 0.6}))`,
+            boxShadow: `0 0 ${p.size * 3}px hsl(180 40% 70% / ${p.opacity * 0.4})`,
             animationDuration: `${p.duration + 5}s`,
             animationDelay: `${p.delay}s`,
           }}
@@ -114,9 +116,9 @@ function FreshBubbles() {
       ))}
       {/* Subtle light rays from top */}
       <div 
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-40"
         style={{
-          background: 'linear-gradient(180deg, hsl(180 30% 95% / 0.4) 0%, transparent 40%)',
+          background: 'linear-gradient(180deg, hsl(180 35% 90% / 0.5) 0%, transparent 50%)',
         }}
       />
     </div>

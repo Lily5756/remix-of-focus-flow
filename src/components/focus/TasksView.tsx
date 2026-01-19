@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Plus, Calendar, Check, Trash2, X } from 'lucide-react';
+import { Plus, Calendar, Check, Trash2, X, FileText } from 'lucide-react';
 import { format, isToday, isTomorrow, isPast, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { Task } from '@/types/focus';
+import { TaskDetailModal } from './TaskDetailModal';
 
 interface TasksViewProps {
   tasks: Task[];
@@ -10,6 +11,7 @@ interface TasksViewProps {
   onCompleteTask: (taskId: string) => void;
   onDeleteTask: (taskId: string) => void;
   onUpdateTaskDate: (taskId: string, scheduledDate: string | null) => void;
+  onUpdateTaskNotes?: (taskId: string, notes: string) => void;
 }
 
 export function TasksView({
@@ -18,10 +20,12 @@ export function TasksView({
   onCompleteTask,
   onDeleteTask,
   onUpdateTaskDate,
+  onUpdateTaskNotes,
 }: TasksViewProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskDate, setNewTaskDate] = useState('');
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +78,7 @@ export function TasksView({
 
       {/* Add task form */}
       {isAdding && (
-        <form onSubmit={handleSubmit} className="mb-4 p-4 rounded-2xl bg-card border border-border">
+        <form onSubmit={handleSubmit} className="mb-4 p-4 rounded-2xl bg-card border border-border mood-transition">
           <input
             type="text"
             value={newTaskText}
@@ -82,7 +86,7 @@ export function TasksView({
             placeholder="What do you need to focus on?"
             autoFocus
             maxLength={200}
-            className="w-full px-3 py-2 rounded-lg bg-muted border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring mb-3"
+            className="w-full px-3 py-2 rounded-lg bg-muted border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring mb-3 mood-transition"
           />
           
           <div className="flex items-center gap-2 mb-3">
@@ -92,7 +96,7 @@ export function TasksView({
               value={newTaskDate}
               onChange={(e) => setNewTaskDate(e.target.value)}
               min={format(new Date(), 'yyyy-MM-dd')}
-              className="flex-1 px-3 py-2 rounded-lg bg-muted border-0 text-foreground focus:outline-none focus:ring-2 focus:ring-ring text-sm"
+              className="flex-1 px-3 py-2 rounded-lg bg-muted border-0 text-foreground focus:outline-none focus:ring-2 focus:ring-ring text-sm mood-transition"
             />
             {newTaskDate && (
               <button
@@ -109,7 +113,7 @@ export function TasksView({
             <button
               type="submit"
               disabled={!newTaskText.trim()}
-              className="flex-1 px-4 py-2 rounded-lg bg-foreground text-background font-medium disabled:opacity-50"
+              className="flex-1 px-4 py-2 rounded-lg bg-foreground text-background font-medium disabled:opacity-50 mood-transition"
             >
               Add Task
             </button>
@@ -120,7 +124,7 @@ export function TasksView({
                 setNewTaskText('');
                 setNewTaskDate('');
               }}
-              className="px-4 py-2 rounded-lg bg-muted text-muted-foreground"
+              className="px-4 py-2 rounded-lg bg-muted text-muted-foreground mood-transition"
             >
               Cancel
             </button>
@@ -145,7 +149,7 @@ export function TasksView({
             {incompleteTasks.map((task) => (
               <div
                 key={task.id}
-                className="flex items-start gap-3 p-3 rounded-xl bg-card border border-border"
+                className="flex items-start gap-3 p-3 rounded-xl bg-card border border-border mood-transition"
               >
                 <button
                   onClick={() => onCompleteTask(task.id)}
@@ -154,9 +158,12 @@ export function TasksView({
                   <Check className="w-3 h-3 opacity-0 group-hover:opacity-100" />
                 </button>
                 
-                <div className="flex-1 min-w-0">
+                <button
+                  onClick={() => setSelectedTask(task)}
+                  className="flex-1 min-w-0 text-left hover:opacity-80 transition-opacity"
+                >
                   <p className="text-sm font-medium">{task.text}</p>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
                     {task.scheduledDate ? (
                       <span className={cn(
                         "text-xs",
@@ -166,23 +173,29 @@ export function TasksView({
                         {formatTaskDate(task.scheduledDate)}
                       </span>
                     ) : (
-                      <button
-                        onClick={() => {
+                      <span
+                        onClick={(e) => {
+                          e.stopPropagation();
                           const today = format(new Date(), 'yyyy-MM-dd');
                           onUpdateTaskDate(task.id, today);
                         }}
-                        className="text-xs text-muted-foreground hover:text-foreground"
+                        className="text-xs text-muted-foreground hover:text-foreground cursor-pointer"
                       >
                         + Add date
-                      </button>
+                      </span>
                     )}
                     {task.completedPomodoros > 0 && (
                       <span className="text-xs text-muted-foreground">
                         · {task.completedPomodoros} 🍅
                       </span>
                     )}
+                    {task.notes && (
+                      <span className="text-xs text-muted-foreground flex items-center gap-0.5">
+                        · <FileText className="w-3 h-3" /> Notes
+                      </span>
+                    )}
                   </div>
-                </div>
+                </button>
 
                 <button
                   onClick={() => onDeleteTask(task.id)}
@@ -205,7 +218,7 @@ export function TasksView({
               {completedTasks.slice(0, 5).map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/50"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 mood-transition"
                 >
                   <div className="w-5 h-5 rounded-full bg-foreground flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3 text-background" />
@@ -225,6 +238,16 @@ export function TasksView({
           </div>
         )}
       </div>
+
+      {/* Task Detail Modal */}
+      {selectedTask && onUpdateTaskNotes && (
+        <TaskDetailModal
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+          onUpdateNotes={onUpdateTaskNotes}
+          onComplete={onCompleteTask}
+        />
+      )}
     </div>
   );
 }

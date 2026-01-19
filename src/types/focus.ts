@@ -1,6 +1,7 @@
 export interface Task {
   id: string;
   text: string;
+  notes: string; // Multi-line notes for the task
   completedPomodoros: number;
   isCompleted: boolean;
   createdAt: number;

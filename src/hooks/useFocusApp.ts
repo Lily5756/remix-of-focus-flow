@@ -67,6 +67,7 @@ export function useFocusApp() {
     const newTask: Task = {
       id: generateId(),
       text: text.trim(),
+      notes: '',
       completedPomodoros: 0,
       isCompleted: false,
       createdAt: Date.now(),
@@ -79,6 +80,12 @@ export function useFocusApp() {
     }
     return newTask;
   }, [setTasks, setPreferences]);
+
+  const updateTaskNotes = useCallback((taskId: string, notes: string) => {
+    setTasks(prev => prev.map(t => 
+      t.id === taskId ? { ...t, notes } : t
+    ));
+  }, [setTasks]);
 
   const updateTaskDate = useCallback((taskId: string, scheduledDate: string | null) => {
     setTasks(prev => prev.map(t => 
@@ -240,6 +247,7 @@ export function useFocusApp() {
     completeTask,
     deleteTask,
     updateTaskDate,
+    updateTaskNotes,
     updateDuration,
     startSession,
     submitReflection,

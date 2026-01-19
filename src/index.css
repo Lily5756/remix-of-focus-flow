@@ -4,13 +4,13 @@
 
 /* 
   Pomodoro Focus App Design System
-  Minimal Monochrome palette - calm, cozy, Apple-inspired
+  Mood-based themes with gradients
   All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Warm off-white background for comfort */
+    /* Default light theme tokens */
     --background: 0 0% 98%;
     --foreground: 0 0% 9%;
 
@@ -20,19 +20,15 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 9%;
 
-    /* Primary is the main action color - deep charcoal */
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
 
-    /* Secondary for less prominent elements */
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 9%;
 
-    /* Muted for backgrounds and subtle text */
     --muted: 0 0% 94%;
     --muted-foreground: 0 0% 45%;
 
-    /* Accent for hover states */
     --accent: 0 0% 92%;
     --accent-foreground: 0 0% 9%;
 
@@ -44,6 +40,12 @@
     --ring: 0 0% 9%;
 
     --radius: 0.75rem;
+
+    /* Mood gradient tokens */
+    --gradient-start: 0 0% 98%;
+    --gradient-end: 0 0% 95%;
+    --glow-color: 0 0% 90%;
+    --timer-accent: 0 0% 20%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 26%;
@@ -84,6 +86,11 @@
     --input: 0 0% 18%;
     --ring: 0 0% 85%;
 
+    --gradient-start: 0 0% 7%;
+    --gradient-end: 0 0% 10%;
+    --glow-color: 0 0% 15%;
+    --timer-accent: 0 0% 80%;
+
     --sidebar-background: 0 0% 10%;
     --sidebar-foreground: 0 0% 96%;
     --sidebar-primary: 0 0% 48%;
@@ -93,6 +100,171 @@
     --sidebar-border: 0 0% 16%;
     --sidebar-ring: 0 0% 59%;
   }
+
+  /* ========== MOOD THEMES ========== */
+  
+  /* Cozy Mode ☕ - Warm, soft, comforting */
+  .mood-cozy {
+    --background: 35 40% 96%;
+    --foreground: 25 20% 15%;
+
+    --card: 30 30% 98%;
+    --card-foreground: 25 20% 15%;
+
+    --popover: 30 30% 98%;
+    --popover-foreground: 25 20% 15%;
+
+    --primary: 25 25% 20%;
+    --primary-foreground: 35 40% 96%;
+
+    --secondary: 30 25% 93%;
+    --secondary-foreground: 25 20% 15%;
+
+    --muted: 30 20% 90%;
+    --muted-foreground: 25 15% 45%;
+
+    --accent: 25 30% 88%;
+    --accent-foreground: 25 20% 15%;
+
+    --border: 30 20% 88%;
+    --input: 30 20% 88%;
+    --ring: 25 25% 20%;
+
+    --gradient-start: 35 45% 97%;
+    --gradient-end: 25 55% 90%;
+    --glow-color: 30 40% 85%;
+    --timer-accent: 25 60% 50%;
+  }
+
+  .dark.mood-cozy {
+    --background: 25 20% 8%;
+    --foreground: 35 30% 92%;
+
+    --card: 25 18% 12%;
+    --card-foreground: 35 30% 92%;
+
+    --popover: 25 18% 12%;
+    --popover-foreground: 35 30% 92%;
+
+    --primary: 35 30% 90%;
+    --primary-foreground: 25 20% 10%;
+
+    --secondary: 25 15% 16%;
+    --secondary-foreground: 35 30% 92%;
+
+    --muted: 25 15% 16%;
+    --muted-foreground: 30 15% 55%;
+
+    --accent: 25 18% 20%;
+    --accent-foreground: 35 30% 92%;
+
+    --border: 25 15% 20%;
+    --input: 25 15% 20%;
+    --ring: 35 30% 80%;
+
+    --gradient-start: 25 20% 8%;
+    --gradient-end: 20 25% 12%;
+    --glow-color: 25 30% 18%;
+    --timer-accent: 30 50% 60%;
+  }
+
+  /* Locked-In Mode 🔒 - Dark, focused, serious */
+  .mood-locked-in {
+    --background: 0 0% 6%;
+    --foreground: 0 0% 92%;
+
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 92%;
+
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 92%;
+
+    --primary: 0 0% 92%;
+    --primary-foreground: 0 0% 6%;
+
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 92%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 55%;
+
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 92%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 0 0% 80%;
+
+    --gradient-start: 0 0% 4%;
+    --gradient-end: 0 0% 10%;
+    --glow-color: 0 0% 12%;
+    --timer-accent: 0 0% 70%;
+  }
+
+  /* Fresh Start Mode 🌤️ - Bright, clean, optimistic */
+  .mood-fresh {
+    --background: 180 30% 98%;
+    --foreground: 200 25% 15%;
+
+    --card: 180 25% 100%;
+    --card-foreground: 200 25% 15%;
+
+    --popover: 180 25% 100%;
+    --popover-foreground: 200 25% 15%;
+
+    --primary: 200 30% 20%;
+    --primary-foreground: 180 30% 98%;
+
+    --secondary: 170 20% 95%;
+    --secondary-foreground: 200 25% 15%;
+
+    --muted: 170 15% 92%;
+    --muted-foreground: 200 15% 45%;
+
+    --accent: 165 25% 90%;
+    --accent-foreground: 200 25% 15%;
+
+    --border: 170 15% 88%;
+    --input: 170 15% 88%;
+    --ring: 200 30% 20%;
+
+    --gradient-start: 180 35% 99%;
+    --gradient-end: 170 40% 94%;
+    --glow-color: 175 30% 88%;
+    --timer-accent: 175 50% 45%;
+  }
+
+  .dark.mood-fresh {
+    --background: 200 20% 8%;
+    --foreground: 180 25% 92%;
+
+    --card: 200 18% 11%;
+    --card-foreground: 180 25% 92%;
+
+    --popover: 200 18% 11%;
+    --popover-foreground: 180 25% 92%;
+
+    --primary: 180 25% 90%;
+    --primary-foreground: 200 20% 10%;
+
+    --secondary: 200 15% 15%;
+    --secondary-foreground: 180 25% 92%;
+
+    --muted: 200 15% 15%;
+    --muted-foreground: 180 15% 55%;
+
+    --accent: 200 18% 18%;
+    --accent-foreground: 180 25% 92%;
+
+    --border: 200 15% 18%;
+    --input: 200 15% 18%;
+    --ring: 180 25% 80%;
+
+    --gradient-start: 200 20% 6%;
+    --gradient-end: 190 25% 12%;
+    --glow-color: 195 25% 16%;
+    --timer-accent: 175 45% 55%;
+  }
 }
 
 @layer base {
@@ -101,13 +273,32 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    background: linear-gradient(
+      145deg,
+      hsl(var(--gradient-start)) 0%,
+      hsl(var(--gradient-end)) 100%
+    );
+    min-height: 100vh;
+    transition: background 300ms ease-out, color 200ms ease-out;
   }
 }
 
-/* Custom animations */
+/* Mood transition wrapper */
 @layer utilities {
+  .mood-transition {
+    transition: 
+      background-color 300ms ease-out,
+      border-color 200ms ease-out,
+      color 200ms ease-out,
+      box-shadow 300ms ease-out;
+  }
+
+  .glow-effect {
+    box-shadow: 0 0 60px 20px hsl(var(--glow-color) / 0.3);
+  }
+
   .animate-in {
     animation: animate-in 0.2s ease-out;
   }
@@ -121,5 +312,14 @@
       opacity: 1;
       transform: scale(1);
     }
+  }
+
+  .fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }

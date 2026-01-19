@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useMoodTheme } from '@/hooks/useMoodTheme';
+import { AmbientEffects } from './AmbientEffects';
 
 interface WelcomeScreenProps {
   onComplete: (name: string) => void;
@@ -12,7 +13,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize mood theme on welcome screen too
-  useMoodTheme();
+  const { activeMood } = useMoodTheme();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,8 +47,11 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 animate-in fade-in duration-500 mood-transition">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 animate-in fade-in duration-500 mood-transition relative">
+      {/* Ambient effects */}
+      <AmbientEffects mood={activeMood} />
+      
+      <div className="w-full max-w-sm relative z-10">
         {/* Welcome header */}
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold mb-3">Welcome 👋</h1>

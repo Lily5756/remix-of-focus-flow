@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { useReportData, formatDuration, TimeRange } from '@/hooks/useReportData';
 import { SimpleBarChart } from './SimpleBarChart';
 import { ShareCard } from './ShareCard';
+import { StreakCalendar } from './StreakCalendar';
 import { toPng } from 'html-to-image';
 
 interface ReportViewProps {
@@ -148,6 +149,9 @@ export function ReportView({ userName }: ReportViewProps) {
             </div>
             <SimpleBarChart data={reportData.chartData} />
           </div>
+
+          {/* Streak Calendar */}
+          <StreakCalendar />
 
           {/* Highlights */}
           <div className="bg-card border border-border rounded-2xl p-4 space-y-3">

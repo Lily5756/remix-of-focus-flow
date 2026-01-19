@@ -6,6 +6,7 @@ import { TimerControls } from '@/components/focus/TimerControls';
 import { ReflectionModal } from '@/components/focus/ReflectionModal';
 import { StreakDisplay } from '@/components/focus/StreakDisplay';
 import { Encouragement } from '@/components/focus/Encouragement';
+import { ThemeToggle } from '@/components/focus/ThemeToggle';
 
 function Index() {
   const {
@@ -29,13 +30,15 @@ function Index() {
   const isTimerActive = timer.state !== 'idle';
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
       {/* Encouragement toast */}
       <Encouragement message={encouragement} />
 
-      {/* Header with streak */}
-      <header className="pt-8 pb-4 px-4">
+      {/* Header with streak and theme toggle */}
+      <header className="pt-6 pb-4 px-4 flex items-center justify-between">
+        <div className="w-9" /> {/* Spacer for centering */}
         <StreakDisplay streakData={streakData} />
+        <ThemeToggle />
       </header>
 
       {/* Main content */}

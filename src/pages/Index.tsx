@@ -18,6 +18,7 @@ import { WelcomeScreen } from '@/components/focus/WelcomeScreen';
 import { GreetingBanner } from '@/components/focus/GreetingBanner';
 import { SettingsView } from '@/components/focus/SettingsView';
 import { ReportView } from '@/components/focus/ReportView';
+import { AmbientEffects } from '@/components/focus/AmbientEffects';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
@@ -25,7 +26,7 @@ export default function Index() {
   const [hasShownGreeting, setHasShownGreeting] = useState(false);
   
   // Initialize mood theme (applies to document)
-  useMoodTheme();
+  const { activeMood } = useMoodTheme();
   
   const {
     tasks,
@@ -95,7 +96,9 @@ export default function Index() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col mood-transition">
+    <div className="min-h-screen flex flex-col mood-transition relative">
+      {/* Ambient effects based on mood */}
+      <AmbientEffects mood={activeMood} isActive={isFocusing} />
       {/* Greeting banner */}
       {showGreeting && (
         <GreetingBanner name={userName} onDismiss={handleGreetingDismiss} />

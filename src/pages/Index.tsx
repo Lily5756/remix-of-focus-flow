@@ -43,7 +43,7 @@ export default function Index() {
 
       {/* Header with streak and theme toggle */}
       <header className="pt-6 pb-4 px-4 flex items-center justify-between">
-        <div className="w-9" /> {/* Spacer for centering */}
+        <div className="w-9" />
         <StreakDisplay streakData={streakData} />
         <ThemeToggle />
       </header>
@@ -56,7 +56,6 @@ export default function Index() {
       {/* Content */}
       {activeTab === 'focus' ? (
         <main className="flex-1 flex flex-col items-center justify-center px-4 pb-8 -mt-4">
-          {/* Timer */}
           <div className="mb-8">
             <TimerDisplay
               timeRemaining={timer.timeRemaining}
@@ -65,7 +64,6 @@ export default function Index() {
             />
           </div>
 
-          {/* Duration selector */}
           <div className="mb-8">
             <DurationSelector
               selectedDuration={selectedDuration}
@@ -74,7 +72,6 @@ export default function Index() {
             />
           </div>
 
-          {/* Task input */}
           <div className="mb-10 w-full">
             <TaskInput
               tasks={tasks}
@@ -86,7 +83,6 @@ export default function Index() {
             />
           </div>
 
-          {/* Controls */}
           <TimerControls
             state={timer.state}
             hasActiveTask={!!activeTask}
@@ -103,7 +99,6 @@ export default function Index() {
         </main>
       )}
 
-      {/* Reflection modal */}
       {showReflection && (
         <ReflectionModal
           onSubmit={submitReflection}
@@ -113,5 +108,3 @@ export default function Index() {
     </div>
   );
 }
-
-

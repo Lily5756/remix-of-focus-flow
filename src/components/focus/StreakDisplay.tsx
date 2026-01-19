@@ -1,5 +1,6 @@
 import { Flame, Trophy, Frown } from 'lucide-react';
 import { StreakData } from '@/types/focus';
+import { useEffect, useState, useRef } from 'react';
 
 interface StreakDisplayProps {
   streakData: StreakData;
@@ -36,14 +37,29 @@ function getMotivationalMessage(streak: number): string {
 export function StreakDisplay({ streakData }: StreakDisplayProps) {
   const { currentStreak, longestStreak, todaySessionCount } = streakData;
   const motivationalMessage = getMotivationalMessage(currentStreak);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const prevStreakRef = useRef(currentStreak);
+
+  useEffect(() => {
+    if (currentStreak > prevStreakRef.current) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => setIsAnimating(false), 600);
+      return () => clearTimeout(timer);
+    }
+    prevStreakRef.current = currentStreak;
+  }, [currentStreak]);
 
   return (
     <div className="flex flex-col items-center gap-1.5">
       <div className="flex items-center justify-center gap-3 text-sm text-muted-foreground">
-        <div className="flex items-center gap-1">
+        <div 
+          className={`flex items-center gap-1 transition-transform duration-300 ${
+            isAnimating ? 'animate-[streak-pop_0.6s_ease-out]' : ''
+          }`}
+        >
           {currentStreak > 0 ? (
             <>
-              <Flame className="w-4 h-4 text-orange-500" />
+              <Flame className={`w-4 h-4 text-orange-500 ${isAnimating ? 'animate-[streak-glow_0.6s_ease-out]' : ''}`} />
               <span className="font-medium">{currentStreak}</span>
               <span className="text-xs">day{currentStreak !== 1 ? 's' : ''}</span>
             </>
@@ -68,7 +84,9 @@ export function StreakDisplay({ streakData }: StreakDisplayProps) {
           </div>
         )}
       </div>
-      <p className="text-xs text-muted-foreground/80 italic">{motivationalMessage}</p>
+      <p className={`text-xs text-muted-foreground/80 italic transition-opacity duration-300 ${
+        isAnimating ? 'animate-fade-in' : ''
+      }`}>{motivationalMessage}</p>
     </div>
   );
 }

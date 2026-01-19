@@ -125,7 +125,7 @@ export default function Index() {
 
       {/* Content */}
       {activeTab === 'focus' && (
-        <main className="flex-1 flex flex-col items-center justify-center px-4 pb-8 -mt-4">
+        <main className="flex-1 flex flex-col items-center justify-center px-4 pb-24 -mt-4">
           <div className="mb-8">
             <TimerDisplay
               timeRemaining={timer.timeRemaining}

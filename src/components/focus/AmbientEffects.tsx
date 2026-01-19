@@ -92,9 +92,9 @@ function LockedInPulse({ isActive }: { isActive?: boolean }) {
   );
 }
 
-// Fresh Start Mode: Gentle floating bubbles/orbs
+// Fresh Start Mode: Gentle floating bubbles/orbs - MORE VISIBLE on light backgrounds
 function FreshBubbles() {
-  const bubbles = useMemo(() => generateParticles(15), []); // More bubbles
+  const bubbles = useMemo(() => generateParticles(18), []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -105,22 +105,32 @@ function FreshBubbles() {
           style={{
             left: `${p.x}%`,
             bottom: `-${p.size * 2}px`,
-            width: `${p.size * 2.5}px`,
-            height: `${p.size * 2.5}px`,
-            background: `radial-gradient(circle at 30% 30%, hsl(175 50% 75% / ${p.opacity + 0.15}), hsl(190 40% 65% / ${p.opacity * 0.6}))`,
-            boxShadow: `0 0 ${p.size * 3}px hsl(180 40% 70% / ${p.opacity * 0.4})`,
+            width: `${p.size * 3}px`,
+            height: `${p.size * 3}px`,
+            // Use darker, more saturated colors for visibility on light backgrounds
+            background: `radial-gradient(circle at 30% 30%, hsl(175 60% 55% / ${p.opacity + 0.25}), hsl(190 50% 45% / ${p.opacity + 0.1}))`,
+            boxShadow: `0 0 ${p.size * 4}px hsl(180 50% 50% / ${p.opacity * 0.5})`,
             animationDuration: `${p.duration + 5}s`,
             animationDelay: `${p.delay}s`,
           }}
         />
       ))}
-      {/* Subtle light rays from top */}
-      <div 
-        className="absolute inset-0 opacity-40"
-        style={{
-          background: 'linear-gradient(180deg, hsl(180 35% 90% / 0.5) 0%, transparent 50%)',
-        }}
-      />
+      {/* Subtle floating sparkles */}
+      {bubbles.slice(0, 8).map((p) => (
+        <div
+          key={`sparkle-${p.id}`}
+          className="absolute animate-float-cozy"
+          style={{
+            left: `${(p.x + 30) % 100}%`,
+            top: `${p.y}%`,
+            width: `${p.size * 0.8}px`,
+            height: `${p.size * 0.8}px`,
+            background: `radial-gradient(circle, hsl(50 80% 70% / ${p.opacity + 0.2}) 0%, transparent 70%)`,
+            animationDuration: `${p.duration * 0.8}s`,
+            animationDelay: `${p.delay + 2}s`,
+          }}
+        />
+      ))}
     </div>
   );
 }

@@ -4,6 +4,7 @@ export interface Task {
   completedPomodoros: number;
   isCompleted: boolean;
   createdAt: number;
+  scheduledDate: string | null; // Format: 'yyyy-MM-dd'
 }
 
 export interface FocusSession {

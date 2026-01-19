@@ -7,7 +7,7 @@ import { ReflectionModal } from '@/components/focus/ReflectionModal';
 import { StreakDisplay } from '@/components/focus/StreakDisplay';
 import { Encouragement } from '@/components/focus/Encouragement';
 
-const Index = () => {
+function Index() {
   const {
     tasks,
     activeTask,

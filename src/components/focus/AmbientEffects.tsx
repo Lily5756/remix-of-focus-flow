@@ -136,7 +136,7 @@ export function AmbientEffects({ mood, isActive }: AmbientEffectsProps) {
 
   return (
     <div className={cn(
-      "fixed inset-0 z-0 transition-opacity duration-500",
+      "fixed inset-0 z-0 pointer-events-none transition-opacity duration-500",
       mounted ? "opacity-100" : "opacity-0"
     )}>
       {mood === 'cozy' && <CozyParticles />}

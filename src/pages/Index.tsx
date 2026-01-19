@@ -1,12 +1,94 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useFocusApp } from '@/hooks/useFocusApp';
+import { TimerDisplay } from '@/components/focus/TimerDisplay';
+import { DurationSelector } from '@/components/focus/DurationSelector';
+import { TaskInput } from '@/components/focus/TaskInput';
+import { TimerControls } from '@/components/focus/TimerControls';
+import { ReflectionModal } from '@/components/focus/ReflectionModal';
+import { StreakDisplay } from '@/components/focus/StreakDisplay';
+import { Encouragement } from '@/components/focus/Encouragement';
 
 const Index = () => {
+  const {
+    tasks,
+    activeTask,
+    selectedDuration,
+    timer,
+    showReflection,
+    streakData,
+    encouragement,
+    addTask,
+    selectTask,
+    completeTask,
+    updateDuration,
+    startSession,
+    submitReflection,
+    skipReflection,
+    endSession,
+  } = useFocusApp();
+
+  const isTimerActive = timer.state !== 'idle';
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Encouragement toast */}
+      <Encouragement message={encouragement} />
+
+      {/* Header with streak */}
+      <header className="pt-8 pb-4 px-4">
+        <StreakDisplay streakData={streakData} />
+      </header>
+
+      {/* Main content */}
+      <main className="flex-1 flex flex-col items-center justify-center px-4 pb-8 -mt-8">
+        {/* Timer */}
+        <div className="mb-8">
+          <TimerDisplay
+            timeRemaining={timer.timeRemaining}
+            progress={timer.progress}
+            state={timer.state}
+          />
+        </div>
+
+        {/* Duration selector */}
+        <div className="mb-8">
+          <DurationSelector
+            selectedDuration={selectedDuration}
+            onSelect={updateDuration}
+            disabled={isTimerActive}
+          />
+        </div>
+
+        {/* Task input */}
+        <div className="mb-10 w-full">
+          <TaskInput
+            tasks={tasks}
+            activeTask={activeTask}
+            onAddTask={addTask}
+            onSelectTask={selectTask}
+            onCompleteTask={completeTask}
+            disabled={isTimerActive}
+          />
+        </div>
+
+        {/* Controls */}
+        <TimerControls
+          state={timer.state}
+          hasActiveTask={!!activeTask}
+          onStart={startSession}
+          onPause={timer.pause}
+          onResume={timer.resume}
+          onStop={endSession}
+          onSkipBreak={timer.skipBreak}
+        />
+      </main>
+
+      {/* Reflection modal */}
+      {showReflection && (
+        <ReflectionModal
+          onSubmit={submitReflection}
+          onSkip={skipReflection}
+        />
+      )}
     </div>
   );
 };

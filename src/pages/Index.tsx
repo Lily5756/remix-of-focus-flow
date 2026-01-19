@@ -19,11 +19,13 @@ import { GreetingBanner } from '@/components/focus/GreetingBanner';
 import { SettingsView } from '@/components/focus/SettingsView';
 import { ReportView } from '@/components/focus/ReportView';
 import { AmbientEffects } from '@/components/focus/AmbientEffects';
+import { TaskDetailModal } from '@/components/focus/TaskDetailModal';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
   const [showGreeting, setShowGreeting] = useState(false);
   const [hasShownGreeting, setHasShownGreeting] = useState(false);
+  const [showTaskDetail, setShowTaskDetail] = useState(false);
   
   // Initialize mood theme (applies to document)
   const { activeMood } = useMoodTheme();
@@ -43,6 +45,7 @@ export default function Index() {
     completeTask,
     deleteTask,
     updateTaskDate,
+    updateTaskNotes,
     updateDuration,
     startSession,
     submitReflection,
@@ -138,7 +141,7 @@ export default function Index() {
             />
           </div>
 
-          <div className="mb-10 w-full">
+          <div className="mb-6 w-full">
             <TaskInput
               tasks={tasks}
               activeTask={activeTask}
@@ -148,6 +151,19 @@ export default function Index() {
               disabled={isTimerActive}
             />
           </div>
+
+          {/* Quick notes button for active task */}
+          {activeTask && (
+            <button
+              onClick={() => setShowTaskDetail(true)}
+              className="mb-6 px-4 py-2 rounded-xl bg-muted/50 text-muted-foreground text-sm flex items-center gap-2 hover:bg-muted transition-colors mood-transition"
+            >
+              <span>📝</span>
+              <span>
+                {activeTask.notes ? 'View Notes' : 'Add Notes'}
+              </span>
+            </button>
+          )}
 
           {/* Music Controls - show during focus or break */}
           {isTimerActive && (
@@ -183,6 +199,7 @@ export default function Index() {
             onCompleteTask={completeTask}
             onDeleteTask={deleteTask}
             onUpdateTaskDate={updateTaskDate}
+            onUpdateTaskNotes={updateTaskNotes}
           />
         </main>
       )}
@@ -212,6 +229,16 @@ export default function Index() {
         <ReflectionModal
           onSubmit={submitReflection}
           onSkip={skipReflection}
+        />
+      )}
+
+      {/* Task Detail Modal */}
+      {showTaskDetail && activeTask && (
+        <TaskDetailModal
+          task={activeTask}
+          onClose={() => setShowTaskDetail(false)}
+          onUpdateNotes={updateTaskNotes}
+          onComplete={completeTask}
         />
       )}
     </div>

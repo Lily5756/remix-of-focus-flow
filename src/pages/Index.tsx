@@ -21,12 +21,14 @@ import { SettingsView } from '@/components/focus/SettingsView';
 import { ReportView } from '@/components/focus/ReportView';
 import { AmbientEffects } from '@/components/focus/AmbientEffects';
 import { TaskDetailModal } from '@/components/focus/TaskDetailModal';
+import { AvatarSelector, getAvatarSrc } from '@/components/focus/AvatarSelector';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
   const [showGreeting, setShowGreeting] = useState(false);
   const [hasShownGreeting, setHasShownGreeting] = useState(false);
   const [showTaskDetail, setShowTaskDetail] = useState(false);
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   
   // Initialize mood theme (applies to document)
   const { activeMood } = useMoodTheme();
@@ -41,6 +43,8 @@ export default function Index() {
     streakData,
     encouragement,
     userName,
+    avatarId,
+    customAvatar,
     addTask,
     selectTask,
     completeTask,
@@ -54,7 +58,11 @@ export default function Index() {
     skipReflection,
     endSession,
     setUserName,
+    setAvatarId,
+    setCustomAvatar,
   } = useFocusApp();
+
+  const avatarSrc = getAvatarSrc(avatarId, customAvatar);
 
   const music = useFocusMusic();
 
@@ -114,14 +122,21 @@ export default function Index() {
 
       {/* Header with profile, streak and theme toggle */}
       <header className="pt-6 pb-2 px-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-            <User className="w-4 h-4 text-muted-foreground" />
+        <button 
+          onClick={() => setShowAvatarSelector(true)}
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        >
+          <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center overflow-hidden border-2 border-transparent hover:border-foreground/20 transition-colors">
+            {avatarSrc ? (
+              <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              <User className="w-4 h-4 text-muted-foreground" />
+            )}
           </div>
           {userName && (
             <span className="text-sm font-medium text-foreground">{userName}</span>
           )}
-        </div>
+        </button>
         <StreakDisplay streakData={streakData} />
         <ThemeToggle />
       </header>
@@ -250,6 +265,17 @@ export default function Index() {
           onUpdateNotes={updateTaskNotes}
           onUpdateChecklist={updateTaskChecklist}
           onComplete={completeTask}
+        />
+      )}
+
+      {/* Avatar Selector Modal */}
+      {showAvatarSelector && (
+        <AvatarSelector
+          selectedAvatarId={avatarId}
+          customAvatar={customAvatar}
+          onSelectAvatar={setAvatarId}
+          onUploadAvatar={setCustomAvatar}
+          onClose={() => setShowAvatarSelector(false)}
         />
       )}
     </div>

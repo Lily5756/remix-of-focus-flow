@@ -24,6 +24,8 @@ export function useFocusApp() {
     lastActiveTaskId: null,
     lastSessionDurations: [],
     userName: null,
+    avatarId: null,
+    customAvatar: null,
   });
   const [streakData, setStreakData] = useLocalStorage<StreakData>('focus-streak', {
     currentStreak: 0,
@@ -230,9 +232,19 @@ export function useFocusApp() {
   }, [timer]);
 
   const userName = preferences.userName;
+  const avatarId = preferences.avatarId;
+  const customAvatar = preferences.customAvatar;
 
   const setUserName = useCallback((name: string) => {
     setPreferences(prev => ({ ...prev, userName: name }));
+  }, [setPreferences]);
+
+  const setAvatarId = useCallback((id: string | null) => {
+    setPreferences(prev => ({ ...prev, avatarId: id, customAvatar: null }));
+  }, [setPreferences]);
+
+  const setCustomAvatar = useCallback((dataUrl: string) => {
+    setPreferences(prev => ({ ...prev, customAvatar: dataUrl, avatarId: null }));
   }, [setPreferences]);
 
   return {
@@ -247,6 +259,8 @@ export function useFocusApp() {
     streakData,
     encouragement,
     userName,
+    avatarId,
+    customAvatar,
     
     // Actions
     addTask,
@@ -262,5 +276,7 @@ export function useFocusApp() {
     skipReflection,
     endSession,
     setUserName,
+    setAvatarId,
+    setCustomAvatar,
   };
 }

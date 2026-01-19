@@ -112,21 +112,21 @@ export default function Index() {
       <Encouragement message={encouragement} />
 
       {/* Header with streak and theme toggle */}
-      <header className="pt-6 pb-4 px-4 flex items-center justify-between">
+      <header className="pt-6 pb-2 px-4 flex items-center justify-between">
         <div className="w-9" />
         <StreakDisplay streakData={streakData} />
         <ThemeToggle />
       </header>
 
-      {/* Tab Navigation */}
-      <div className="flex justify-center pb-4 px-4">
+      {/* Tab Navigation - positioned higher */}
+      <div className="flex justify-center py-3 px-4">
         <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
 
       {/* Content */}
       {activeTab === 'focus' && (
-        <main className="flex-1 flex flex-col items-center justify-center px-4 pb-24 -mt-4">
-          <div className="mb-8">
+        <main className="flex-1 flex flex-col items-center justify-center px-4 pb-8 pt-4">
+          <div className="mb-6">
             <TimerDisplay
               timeRemaining={timer.timeRemaining}
               progress={timer.progress}

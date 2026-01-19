@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useFocusApp } from '@/hooks/useFocusApp';
 import { useFocusMusic } from '@/hooks/useFocusMusic';
+import { useMoodTheme } from '@/hooks/useMoodTheme';
 import { TimerDisplay } from '@/components/focus/TimerDisplay';
 import { DurationSelector } from '@/components/focus/DurationSelector';
 import { TaskInput } from '@/components/focus/TaskInput';
@@ -22,6 +23,9 @@ export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
   const [showGreeting, setShowGreeting] = useState(false);
   const [hasShownGreeting, setHasShownGreeting] = useState(false);
+  
+  // Initialize mood theme (applies to document)
+  useMoodTheme();
   
   const {
     tasks,
@@ -91,7 +95,7 @@ export default function Index() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
+    <div className="min-h-screen flex flex-col mood-transition">
       {/* Greeting banner */}
       {showGreeting && (
         <GreetingBanner name={userName} onDismiss={handleGreetingDismiss} />

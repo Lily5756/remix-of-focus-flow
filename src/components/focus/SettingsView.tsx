@@ -1,17 +1,27 @@
 import { useState } from 'react';
-import { User, ChevronRight, Check } from 'lucide-react';
+import { User, ChevronRight, Check, Palette } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useMoodTheme, MoodTheme } from '@/hooks/useMoodTheme';
 
 interface SettingsViewProps {
   userName: string;
   onUpdateName: (name: string) => void;
 }
 
+const MOOD_ICONS: Record<MoodTheme, string> = {
+  auto: '🕐',
+  cozy: '☕',
+  'locked-in': '🔒',
+  fresh: '🌤️',
+};
+
 export function SettingsView({ userName, onUpdateName }: SettingsViewProps) {
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState(userName);
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  
+  const { selectedMood, setMood, moodLabels, moodDescriptions, allMoods, activeMood } = useMoodTheme();
 
   const handleSaveName = () => {
     const trimmedName = newName.trim();
@@ -57,7 +67,7 @@ export function SettingsView({ userName, onUpdateName }: SettingsViewProps) {
       {/* Settings list */}
       <div className="space-y-2">
         {/* Edit Name */}
-        <div className="rounded-2xl bg-card border border-border overflow-hidden">
+        <div className="rounded-2xl bg-card border border-border overflow-hidden mood-transition">
           <div className="px-4 py-1 bg-muted/50">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Profile</p>
           </div>
@@ -78,7 +88,7 @@ export function SettingsView({ userName, onUpdateName }: SettingsViewProps) {
                   autoFocus
                   maxLength={15}
                   className={cn(
-                    "w-full px-4 py-3 rounded-xl bg-muted border-2 transition-colors",
+                    "w-full px-4 py-3 rounded-xl bg-muted border-2 transition-colors mood-transition",
                     "placeholder:text-muted-foreground focus:outline-none",
                     error 
                       ? "border-destructive" 
@@ -96,13 +106,13 @@ export function SettingsView({ userName, onUpdateName }: SettingsViewProps) {
               <div className="flex gap-2">
                 <button
                   onClick={handleSaveName}
-                  className="flex-1 py-2.5 px-4 rounded-xl bg-foreground text-background font-medium text-sm"
+                  className="flex-1 py-2.5 px-4 rounded-xl bg-foreground text-background font-medium text-sm mood-transition"
                 >
                   Save
                 </button>
                 <button
                   onClick={handleCancel}
-                  className="py-2.5 px-4 rounded-xl bg-muted text-muted-foreground font-medium text-sm"
+                  className="py-2.5 px-4 rounded-xl bg-muted text-muted-foreground font-medium text-sm mood-transition"
                 >
                   Cancel
                 </button>
@@ -113,7 +123,7 @@ export function SettingsView({ userName, onUpdateName }: SettingsViewProps) {
               onClick={() => setIsEditingName(true)}
               className="w-full px-4 py-3 flex items-center gap-3 hover:bg-muted/50 transition-colors"
             >
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center mood-transition">
                 <User className="w-4 h-4 text-muted-foreground" />
               </div>
               <div className="flex-1 text-left">
@@ -125,8 +135,51 @@ export function SettingsView({ userName, onUpdateName }: SettingsViewProps) {
           )}
         </div>
 
+        {/* Theme Picker */}
+        <div className="rounded-2xl bg-card border border-border overflow-hidden mood-transition">
+          <div className="px-4 py-1 bg-muted/50 flex items-center gap-2">
+            <Palette className="w-3 h-3 text-muted-foreground" />
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Theme</p>
+          </div>
+          
+          <div className="p-2 space-y-1">
+            {allMoods.map((mood) => (
+              <button
+                key={mood}
+                onClick={() => setMood(mood)}
+                className={cn(
+                  "w-full px-4 py-3 rounded-xl flex items-center gap-3 transition-all duration-200",
+                  selectedMood === mood
+                    ? "bg-foreground text-background"
+                    : "hover:bg-muted/70"
+                )}
+              >
+                <span className="text-lg">{MOOD_ICONS[mood]}</span>
+                <div className="flex-1 text-left">
+                  <p className={cn(
+                    "text-sm font-medium",
+                    selectedMood === mood ? "text-background" : "text-foreground"
+                  )}>
+                    {moodLabels[mood]}
+                  </p>
+                  <p className={cn(
+                    "text-xs",
+                    selectedMood === mood ? "text-background/70" : "text-muted-foreground"
+                  )}>
+                    {moodDescriptions[mood]}
+                    {mood === 'auto' && ` (now: ${moodLabels[activeMood].split(' ')[0]})`}
+                  </p>
+                </div>
+                {selectedMood === mood && (
+                  <Check className="w-4 h-4" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* About section */}
-        <div className="rounded-2xl bg-card border border-border overflow-hidden">
+        <div className="rounded-2xl bg-card border border-border overflow-hidden mood-transition">
           <div className="px-4 py-1 bg-muted/50">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">About</p>
           </div>

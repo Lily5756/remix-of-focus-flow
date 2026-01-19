@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { useMoodTheme } from '@/hooks/useMoodTheme';
 
 interface WelcomeScreenProps {
   onComplete: (name: string) => void;
@@ -9,6 +10,9 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Initialize mood theme on welcome screen too
+  useMoodTheme();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +46,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6 animate-in fade-in duration-500">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 animate-in fade-in duration-500 mood-transition">
       <div className="w-full max-w-sm">
         {/* Welcome header */}
         <div className="text-center mb-10">
@@ -62,7 +66,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
               autoComplete="off"
               maxLength={15}
               className={cn(
-                "w-full px-5 py-4 text-lg rounded-2xl bg-muted border-2 transition-colors",
+                "w-full px-5 py-4 text-lg rounded-2xl bg-card border-2 transition-colors mood-transition",
                 "placeholder:text-muted-foreground focus:outline-none",
                 error 
                   ? "border-destructive focus:border-destructive" 
@@ -88,7 +92,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
             type="submit"
             disabled={isSubmitting}
             className={cn(
-              "w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all",
+              "w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all mood-transition",
               "bg-foreground text-background",
               "hover:opacity-90 active:scale-[0.98]",
               "disabled:opacity-70 disabled:cursor-not-allowed",

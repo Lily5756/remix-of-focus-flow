@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useFocusApp } from '@/hooks/useFocusApp';
 import { TimerDisplay } from '@/components/focus/TimerDisplay';
 import { DurationSelector } from '@/components/focus/DurationSelector';
@@ -11,9 +11,14 @@ import { ThemeToggle } from '@/components/focus/ThemeToggle';
 import { TabNavigation, Tab } from '@/components/focus/TabNavigation';
 import { CalendarView } from '@/components/focus/CalendarView';
 import { TasksView } from '@/components/focus/TasksView';
+import { WelcomeScreen } from '@/components/focus/WelcomeScreen';
+import { GreetingBanner } from '@/components/focus/GreetingBanner';
+import { SettingsView } from '@/components/focus/SettingsView';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
+  const [showGreeting, setShowGreeting] = useState(false);
+  const [hasShownGreeting, setHasShownGreeting] = useState(false);
   
   const {
     tasks,
@@ -24,6 +29,7 @@ export default function Index() {
     showReflection,
     streakData,
     encouragement,
+    userName,
     addTask,
     selectTask,
     completeTask,
@@ -34,16 +40,45 @@ export default function Index() {
     submitReflection,
     skipReflection,
     endSession,
+    setUserName,
   } = useFocusApp();
 
   const isTimerActive = timer.state !== 'idle';
+
+  // Show greeting banner for returning users
+  useEffect(() => {
+    if (userName && !hasShownGreeting) {
+      setShowGreeting(true);
+      setHasShownGreeting(true);
+    }
+  }, [userName, hasShownGreeting]);
+
+  const handleWelcomeComplete = useCallback((name: string) => {
+    setUserName(name);
+    setShowGreeting(true);
+    setHasShownGreeting(true);
+  }, [setUserName]);
+
+  const handleGreetingDismiss = useCallback(() => {
+    setShowGreeting(false);
+  }, []);
 
   const handleTabChange = (tab: Tab) => {
     setActiveTab(tab);
   };
 
+  // Show welcome screen if no user name
+  if (!userName) {
+    return <WelcomeScreen onComplete={handleWelcomeComplete} />;
+  }
+
   return (
     <div className="min-h-screen bg-background flex flex-col transition-colors duration-300">
+      {/* Greeting banner */}
+      {showGreeting && (
+        <GreetingBanner name={userName} onDismiss={handleGreetingDismiss} />
+      )}
+
       {/* Encouragement toast */}
       <Encouragement message={encouragement} />
 
@@ -55,7 +90,7 @@ export default function Index() {
       </header>
 
       {/* Tab Navigation */}
-      <div className="flex justify-center pb-4">
+      <div className="flex justify-center pb-4 px-4">
         <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
 
@@ -116,6 +151,15 @@ export default function Index() {
       {activeTab === 'calendar' && (
         <main className="flex-1 flex flex-col px-2 pb-8">
           <CalendarView />
+        </main>
+      )}
+
+      {activeTab === 'settings' && (
+        <main className="flex-1 flex flex-col pb-8">
+          <SettingsView 
+            userName={userName} 
+            onUpdateName={setUserName} 
+          />
         </main>
       )}
 

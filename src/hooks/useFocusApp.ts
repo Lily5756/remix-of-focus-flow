@@ -23,6 +23,7 @@ export function useFocusApp() {
     preferredDuration: 25,
     lastActiveTaskId: null,
     lastSessionDurations: [],
+    userName: null,
   });
   const [streakData, setStreakData] = useLocalStorage<StreakData>('focus-streak', {
     currentStreak: 0,
@@ -214,6 +215,12 @@ export function useFocusApp() {
     setCurrentSessionId(null);
   }, [timer]);
 
+  const userName = preferences.userName;
+
+  const setUserName = useCallback((name: string) => {
+    setPreferences(prev => ({ ...prev, userName: name }));
+  }, [setPreferences]);
+
   return {
     // State
     tasks: incompleteTasks,
@@ -225,6 +232,7 @@ export function useFocusApp() {
     showReflection,
     streakData,
     encouragement,
+    userName,
     
     // Actions
     addTask,
@@ -237,5 +245,6 @@ export function useFocusApp() {
     submitReflection,
     skipReflection,
     endSession,
+    setUserName,
   };
 }

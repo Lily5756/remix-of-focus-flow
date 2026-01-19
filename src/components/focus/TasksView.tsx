@@ -12,6 +12,7 @@ interface TasksViewProps {
   onDeleteTask: (taskId: string) => void;
   onUpdateTaskDate: (taskId: string, scheduledDate: string | null) => void;
   onUpdateTaskNotes?: (taskId: string, notes: string) => void;
+  onUpdateTaskChecklist?: (taskId: string, checklist: Task['checklist']) => void;
 }
 
 export function TasksView({
@@ -21,6 +22,7 @@ export function TasksView({
   onDeleteTask,
   onUpdateTaskDate,
   onUpdateTaskNotes,
+  onUpdateTaskChecklist,
 }: TasksViewProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [newTaskText, setNewTaskText] = useState('');
@@ -240,11 +242,12 @@ export function TasksView({
       </div>
 
       {/* Task Detail Modal */}
-      {selectedTask && onUpdateTaskNotes && (
+      {selectedTask && onUpdateTaskNotes && onUpdateTaskChecklist && (
         <TaskDetailModal
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
           onUpdateNotes={onUpdateTaskNotes}
+          onUpdateChecklist={onUpdateTaskChecklist}
           onComplete={onCompleteTask}
         />
       )}

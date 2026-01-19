@@ -46,6 +46,7 @@ export default function Index() {
     deleteTask,
     updateTaskDate,
     updateTaskNotes,
+    updateTaskChecklist,
     updateDuration,
     startSession,
     submitReflection,
@@ -200,6 +201,7 @@ export default function Index() {
             onDeleteTask={deleteTask}
             onUpdateTaskDate={updateTaskDate}
             onUpdateTaskNotes={updateTaskNotes}
+            onUpdateTaskChecklist={updateTaskChecklist}
           />
         </main>
       )}
@@ -238,6 +240,7 @@ export default function Index() {
           task={activeTask}
           onClose={() => setShowTaskDetail(false)}
           onUpdateNotes={updateTaskNotes}
+          onUpdateChecklist={updateTaskChecklist}
           onComplete={completeTask}
         />
       )}

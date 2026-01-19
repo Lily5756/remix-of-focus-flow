@@ -1,25 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
-import { X, FileText, Check } from 'lucide-react';
+import { X, FileText, Check, Plus, Square, CheckSquare, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Task } from '@/types/focus';
+import { Task, ChecklistItem } from '@/types/focus';
 
 interface TaskDetailModalProps {
   task: Task;
   onClose: () => void;
   onUpdateNotes: (taskId: string, notes: string) => void;
+  onUpdateChecklist: (taskId: string, checklist: ChecklistItem[]) => void;
   onComplete: (taskId: string) => void;
 }
+
+const generateId = () => Math.random().toString(36).substring(2, 9);
 
 export function TaskDetailModal({ 
   task, 
   onClose, 
-  onUpdateNotes, 
+  onUpdateNotes,
+  onUpdateChecklist,
   onComplete 
 }: TaskDetailModalProps) {
   const [notes, setNotes] = useState(task.notes || '');
+  const [checklist, setChecklist] = useState<ChecklistItem[]>(task.checklist || []);
+  const [newItemText, setNewItemText] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Debounced auto-save
+  // Debounced auto-save for notes
   useEffect(() => {
     const timer = setTimeout(() => {
       if (notes !== task.notes) {
@@ -31,6 +37,20 @@ export function TaskDetailModal({
 
     return () => clearTimeout(timer);
   }, [notes, task.id, task.notes, onUpdateNotes]);
+
+  // Debounced auto-save for checklist
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const taskChecklist = task.checklist || [];
+      if (JSON.stringify(checklist) !== JSON.stringify(taskChecklist)) {
+        setIsSaving(true);
+        onUpdateChecklist(task.id, checklist);
+        setTimeout(() => setIsSaving(false), 500);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [checklist, task.id, task.checklist, onUpdateChecklist]);
 
   // Handle escape key
   useEffect(() => {
@@ -45,6 +65,36 @@ export function TaskDetailModal({
     onComplete(task.id);
     onClose();
   }, [task.id, onComplete, onClose]);
+
+  const addChecklistItem = useCallback(() => {
+    if (!newItemText.trim()) return;
+    const newItem: ChecklistItem = {
+      id: generateId(),
+      text: newItemText.trim(),
+      completed: false,
+    };
+    setChecklist(prev => [...prev, newItem]);
+    setNewItemText('');
+  }, [newItemText]);
+
+  const toggleChecklistItem = useCallback((itemId: string) => {
+    setChecklist(prev => prev.map(item =>
+      item.id === itemId ? { ...item, completed: !item.completed } : item
+    ));
+  }, []);
+
+  const deleteChecklistItem = useCallback((itemId: string) => {
+    setChecklist(prev => prev.filter(item => item.id !== itemId));
+  }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addChecklistItem();
+    }
+  };
+
+  const completedCount = checklist.filter(item => item.completed).length;
 
   return (
     <div 
@@ -88,6 +138,77 @@ export function TaskDetailModal({
             )}
           </div>
 
+          {/* Checklist */}
+          <div>
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+              Checklist
+              {checklist.length > 0 && (
+                <span className="text-xs font-normal">
+                  ({completedCount}/{checklist.length})
+                </span>
+              )}
+            </label>
+            
+            {/* Checklist items */}
+            <div className="mt-2 space-y-1">
+              {checklist.map((item) => (
+                <div 
+                  key={item.id}
+                  className={cn(
+                    "flex items-center gap-2 p-2 rounded-lg group",
+                    "bg-muted/50 hover:bg-muted transition-colors"
+                  )}
+                >
+                  <button
+                    onClick={() => toggleChecklistItem(item.id)}
+                    className="flex-shrink-0 text-foreground/70 hover:text-foreground transition-colors"
+                  >
+                    {item.completed ? (
+                      <CheckSquare className="w-5 h-5 text-primary" />
+                    ) : (
+                      <Square className="w-5 h-5" />
+                    )}
+                  </button>
+                  <span className={cn(
+                    "flex-1 text-sm",
+                    item.completed && "line-through text-muted-foreground"
+                  )}>
+                    {item.text}
+                  </span>
+                  <button
+                    onClick={() => deleteChecklistItem(item.id)}
+                    className="flex-shrink-0 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Add new item */}
+            <div className="mt-2 flex items-center gap-2">
+              <div className="flex-1 flex items-center gap-2 p-2 rounded-lg bg-muted/30 border border-border/50 focus-within:border-foreground/30 transition-colors">
+                <Plus className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                <input
+                  type="text"
+                  value={newItemText}
+                  onChange={(e) => setNewItemText(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Add item..."
+                  className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none"
+                />
+              </div>
+              {newItemText.trim() && (
+                <button
+                  onClick={addChecklistItem}
+                  className="p-2 rounded-lg bg-foreground text-background hover:opacity-90 transition-opacity"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Notes editor */}
           <div>
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -101,7 +222,7 @@ export function TaskDetailModal({
                 "w-full mt-2 p-4 rounded-xl bg-muted border-2 border-transparent",
                 "text-foreground placeholder:text-muted-foreground",
                 "focus:outline-none focus:border-foreground",
-                "resize-none min-h-[200px] transition-colors mood-transition"
+                "resize-none min-h-[120px] transition-colors mood-transition"
               )}
             />
             <p className="mt-1 text-xs text-muted-foreground text-right">

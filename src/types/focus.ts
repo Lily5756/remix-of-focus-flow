@@ -29,6 +29,8 @@ export interface UserPreferences {
   lastActiveTaskId: string | null;
   lastSessionDurations: number[];
   userName: string | null;
+  avatarId: string | null; // Selected preset avatar ID
+  customAvatar: string | null; // Base64 data URL for custom uploaded avatar
 }
 
 export interface StreakData {

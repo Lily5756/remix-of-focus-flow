@@ -68,6 +68,7 @@ export function useFocusApp() {
       id: generateId(),
       text: text.trim(),
       notes: '',
+      checklist: [],
       completedPomodoros: 0,
       isCompleted: false,
       createdAt: Date.now(),
@@ -84,6 +85,12 @@ export function useFocusApp() {
   const updateTaskNotes = useCallback((taskId: string, notes: string) => {
     setTasks(prev => prev.map(t => 
       t.id === taskId ? { ...t, notes } : t
+    ));
+  }, [setTasks]);
+
+  const updateTaskChecklist = useCallback((taskId: string, checklist: Task['checklist']) => {
+    setTasks(prev => prev.map(t => 
+      t.id === taskId ? { ...t, checklist } : t
     ));
   }, [setTasks]);
 
@@ -248,6 +255,7 @@ export function useFocusApp() {
     deleteTask,
     updateTaskDate,
     updateTaskNotes,
+    updateTaskChecklist,
     updateDuration,
     startSession,
     submitReflection,

@@ -1,7 +1,14 @@
+export interface ChecklistItem {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
 export interface Task {
   id: string;
   text: string;
   notes: string; // Multi-line notes for the task
+  checklist: ChecklistItem[]; // Quick checklist items
   completedPomodoros: number;
   isCompleted: boolean;
   createdAt: number;

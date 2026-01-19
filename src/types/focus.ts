@@ -35,7 +35,8 @@ export interface UserPreferences {
 
 export interface StreakData {
   currentStreak: number;
-  lastActiveDate: string;
+  longestStreak: number;
+  lastStreakDate: string; // YYYY-MM-DD local date
   todaySessionCount: number;
 }
 

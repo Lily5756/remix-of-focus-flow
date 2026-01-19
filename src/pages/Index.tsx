@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { User } from 'lucide-react';
 import { useFocusApp } from '@/hooks/useFocusApp';
 import { useFocusMusic } from '@/hooks/useFocusMusic';
 import { useMoodTheme } from '@/hooks/useMoodTheme';
@@ -111,9 +112,16 @@ export default function Index() {
       {/* Encouragement toast */}
       <Encouragement message={encouragement} />
 
-      {/* Header with streak and theme toggle */}
+      {/* Header with profile, streak and theme toggle */}
       <header className="pt-6 pb-2 px-4 flex items-center justify-between">
-        <div className="w-9" />
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+            <User className="w-4 h-4 text-muted-foreground" />
+          </div>
+          {userName && (
+            <span className="text-sm font-medium text-foreground">{userName}</span>
+          )}
+        </div>
         <StreakDisplay streakData={streakData} />
         <ThemeToggle />
       </header>

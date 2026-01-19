@@ -11,6 +11,18 @@ export function useTimer({ onFocusComplete, onBreakComplete }: UseTimerOptions) 
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const intervalRef = useRef<number | null>(null);
+  
+  // Use refs to avoid stale closures in the interval
+  const onFocusCompleteRef = useRef(onFocusComplete);
+  const onBreakCompleteRef = useRef(onBreakComplete);
+  
+  useEffect(() => {
+    onFocusCompleteRef.current = onFocusComplete;
+  }, [onFocusComplete]);
+  
+  useEffect(() => {
+    onBreakCompleteRef.current = onBreakComplete;
+  }, [onBreakComplete]);
 
   const clearTimer = useCallback(() => {
     if (intervalRef.current) {
@@ -70,9 +82,9 @@ export function useTimer({ onFocusComplete, onBreakComplete }: UseTimerOptions) 
           if (prev <= 1) {
             clearTimer();
             if (state === 'focus') {
-              onFocusComplete();
+              onFocusCompleteRef.current();
             } else {
-              onBreakComplete();
+              onBreakCompleteRef.current();
               setState('idle');
             }
             return 0;
@@ -85,7 +97,7 @@ export function useTimer({ onFocusComplete, onBreakComplete }: UseTimerOptions) 
     }
 
     return clearTimer;
-  }, [state, clearTimer, onFocusComplete, onBreakComplete]);
+  }, [state, clearTimer]);
 
   const progress = totalDuration > 0 ? ((totalDuration - timeRemaining) / totalDuration) * 100 : 0;
 

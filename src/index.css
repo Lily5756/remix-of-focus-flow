@@ -441,4 +441,35 @@
       stroke-width: 3;
     }
   }
+
+  /* Streak animations */
+  @keyframes streak-pop {
+    0% {
+      transform: scale(1);
+    }
+    30% {
+      transform: scale(1.25);
+    }
+    50% {
+      transform: scale(0.95);
+    }
+    70% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes streak-glow {
+    0% {
+      filter: drop-shadow(0 0 0 transparent);
+    }
+    50% {
+      filter: drop-shadow(0 0 8px hsl(25 95% 55% / 0.8));
+    }
+    100% {
+      filter: drop-shadow(0 0 0 transparent);
+    }
+  }
 }

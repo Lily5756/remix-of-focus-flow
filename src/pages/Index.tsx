@@ -22,6 +22,7 @@ import { ReportView } from '@/components/focus/ReportView';
 import { AmbientEffects } from '@/components/focus/AmbientEffects';
 import { TaskDetailModal } from '@/components/focus/TaskDetailModal';
 import { AvatarSelector, getAvatarSrc } from '@/components/focus/AvatarSelector';
+import { MilestoneCelebration } from '@/components/focus/MilestoneCelebration';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
@@ -42,6 +43,7 @@ export default function Index() {
     showReflection,
     streakData,
     encouragement,
+    milestoneMessage,
     userName,
     avatarId,
     customAvatar,
@@ -119,6 +121,9 @@ export default function Index() {
 
       {/* Encouragement toast */}
       <Encouragement message={encouragement} />
+
+      {/* Milestone celebration */}
+      <MilestoneCelebration message={milestoneMessage} />
 
       {/* Header with profile, streak and theme toggle */}
       <header className="pt-6 pb-2 px-4 flex items-center justify-between">

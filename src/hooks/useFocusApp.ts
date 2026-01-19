@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { useTimer } from './useTimer';
 import { useSound } from './useSound';
+import { useStreakCelebration, getMilestoneMessage, STREAK_MILESTONES } from './useStreakCelebration';
 import { Task, FocusSession, UserPreferences, StreakData, FOCUS_DURATIONS } from '@/types/focus';
 
 const getToday = () => new Date().toISOString().split('T')[0];
@@ -39,8 +40,10 @@ export function useFocusApp() {
   const [showReflection, setShowReflection] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [encouragement, setEncouragement] = useState<string | null>(null);
+  const [milestoneMessage, setMilestoneMessage] = useState<string | null>(null);
   
   const { playChime } = useSound();
+  const { celebrate } = useStreakCelebration();
 
   const handleFocusComplete = useCallback(() => {
     playChime();
@@ -185,7 +188,9 @@ export function useFocusApp() {
       };
     });
     
-    // Update streak
+    // Update streak and check for milestones
+    let newStreakValue = 0;
+    
     setStreakData(prev => {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
@@ -210,6 +215,9 @@ export function useFocusApp() {
       // Update longest streak if current exceeds it
       const newLongestStreak = Math.max(prev.longestStreak, newStreak);
       
+      // Store new streak for milestone check
+      newStreakValue = newStreak;
+      
       return {
         currentStreak: newStreak,
         longestStreak: newLongestStreak,
@@ -218,15 +226,27 @@ export function useFocusApp() {
       };
     });
     
-    // Show encouragement
-    const randomEncouragement = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
-    setEncouragement(randomEncouragement);
-    setTimeout(() => setEncouragement(null), 3000);
+    // Check for milestone celebration (delay slightly to ensure state is updated)
+    setTimeout(() => {
+      if (STREAK_MILESTONES.includes(newStreakValue as typeof STREAK_MILESTONES[number])) {
+        celebrate(newStreakValue);
+        const message = getMilestoneMessage(newStreakValue);
+        if (message) {
+          setMilestoneMessage(message);
+          setTimeout(() => setMilestoneMessage(null), 5000);
+        }
+      } else {
+        // Show regular encouragement
+        const randomEncouragement = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+        setEncouragement(randomEncouragement);
+        setTimeout(() => setEncouragement(null), 3000);
+      }
+    }, 100);
     
     setShowReflection(false);
     setCurrentSessionId(null);
     timer.startBreak();
-  }, [currentSessionId, activeTaskId, selectedDuration, setSessions, setTasks, setPreferences, setStreakData, timer]);
+  }, [currentSessionId, activeTaskId, selectedDuration, setSessions, setTasks, setPreferences, setStreakData, timer, celebrate]);
 
   const skipReflection = useCallback(() => {
     setShowReflection(false);
@@ -266,6 +286,7 @@ export function useFocusApp() {
     showReflection,
     streakData,
     encouragement,
+    milestoneMessage,
     userName,
     avatarId,
     customAvatar,

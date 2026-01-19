@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useFocusApp } from '@/hooks/useFocusApp';
+import { useFocusMusic } from '@/hooks/useFocusMusic';
 import { TimerDisplay } from '@/components/focus/TimerDisplay';
 import { DurationSelector } from '@/components/focus/DurationSelector';
 import { TaskInput } from '@/components/focus/TaskInput';
 import { TimerControls } from '@/components/focus/TimerControls';
+import { MusicControls } from '@/components/focus/MusicControls';
 import { ReflectionModal } from '@/components/focus/ReflectionModal';
 import { StreakDisplay } from '@/components/focus/StreakDisplay';
 import { Encouragement } from '@/components/focus/Encouragement';
@@ -44,7 +46,22 @@ export default function Index() {
     setUserName,
   } = useFocusApp();
 
+  const music = useFocusMusic();
+
   const isTimerActive = timer.state !== 'idle';
+  const isFocusing = timer.state === 'focus';
+  const isPaused = timer.state === 'paused';
+
+  // Sync music with timer state
+  useEffect(() => {
+    if (isFocusing) {
+      music.startMusic();
+    } else if (isPaused) {
+      music.pauseMusic();
+    } else {
+      music.stopMusic();
+    }
+  }, [isFocusing, isPaused]);
 
   // Show greeting banner for returning users
   useEffect(() => {
@@ -124,6 +141,20 @@ export default function Index() {
               disabled={isTimerActive}
             />
           </div>
+
+          {/* Music Controls - show during focus or break */}
+          {isTimerActive && (
+            <div className="mb-6 w-full max-w-sm">
+              <MusicControls
+                isPlaying={music.isPlaying}
+                isMusicEnabled={music.isMusicEnabled}
+                volume={music.volume}
+                onToggleMusic={music.toggleMusic}
+                onSkipTrack={music.skipTrack}
+                onVolumeChange={music.updateVolume}
+              />
+            </div>
+          )}
 
           <TimerControls
             state={timer.state}

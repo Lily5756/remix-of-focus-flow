@@ -14,6 +14,7 @@ import { TasksView } from '@/components/focus/TasksView';
 import { WelcomeScreen } from '@/components/focus/WelcomeScreen';
 import { GreetingBanner } from '@/components/focus/GreetingBanner';
 import { SettingsView } from '@/components/focus/SettingsView';
+import { ReportView } from '@/components/focus/ReportView';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
@@ -151,6 +152,12 @@ export default function Index() {
       {activeTab === 'calendar' && (
         <main className="flex-1 flex flex-col px-2 pb-8">
           <CalendarView />
+        </main>
+      )}
+
+      {activeTab === 'report' && (
+        <main className="flex-1 flex flex-col pb-8">
+          <ReportView userName={userName} />
         </main>
       )}
 

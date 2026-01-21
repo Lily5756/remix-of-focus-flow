@@ -9,15 +9,20 @@ import {
   POINTS_CONFIG,
   PointsEarned,
   RoomItem,
+  ClaimedReward,
+  SHARING_REWARDS,
+  WELCOME_BONUS,
   getAvailableShopItems
 } from '@/types/room';
 
 const DEFAULT_ROOM_STATE: RoomState = {
-  focusPoints: 0,
-  lifetimeFocusPoints: 0,
+  focusPoints: WELCOME_BONUS, // 1000 FP welcome bonus!
+  lifetimeFocusPoints: WELCOME_BONUS,
   totalCompletedPomodoros: 0,
   ownedItems: [],
   placedItems: [],
+  hasClaimedWelcomeBonus: true,
+  claimedRewards: [],
 };
 
 export function useRoomBuilder() {
@@ -158,6 +163,37 @@ export function useRoomBuilder() {
       .filter((i): i is RoomItem => i !== undefined);
   }, [roomState.ownedItems, roomState.placedItems]);
 
+  // Check if a sharing reward has been claimed
+  const hasClaimedReward = useCallback((rewardType: ClaimedReward['type']): boolean => {
+    return roomState.claimedRewards.some(r => r.type === rewardType);
+  }, [roomState.claimedRewards]);
+
+  // Claim a sharing reward
+  const claimSharingReward = useCallback((rewardType: ClaimedReward['type']): { success: boolean; points: number } => {
+    if (hasClaimedReward(rewardType)) {
+      return { success: false, points: 0 };
+    }
+
+    const reward = Object.values(SHARING_REWARDS).find(r => r.type === rewardType);
+    if (!reward) {
+      return { success: false, points: 0 };
+    }
+
+    const newReward: ClaimedReward = {
+      type: rewardType,
+      claimedAt: Date.now(),
+    };
+
+    setRoomState(prev => ({
+      ...prev,
+      focusPoints: prev.focusPoints + reward.points,
+      lifetimeFocusPoints: prev.lifetimeFocusPoints + reward.points,
+      claimedRewards: [...prev.claimedRewards, newReward],
+    }));
+
+    return { success: true, points: reward.points };
+  }, [hasClaimedReward, setRoomState]);
+
   return {
     // State
     focusPoints: roomState.focusPoints,
@@ -166,6 +202,7 @@ export function useRoomBuilder() {
     ownedItems: roomState.ownedItems,
     placedItems: roomState.placedItems,
     unplacedOwnedItems,
+    claimedRewards: roomState.claimedRewards,
     
     // Actions
     awardPoints,
@@ -176,5 +213,7 @@ export function useRoomBuilder() {
     getItemAtPosition,
     isItemUnlocked,
     ownsItem,
+    hasClaimedReward,
+    claimSharingReward,
   };
 }

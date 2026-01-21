@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { SHOP_ITEMS, GRID_SIZE, GRID_COLS } from '@/types/room';
+import { SHOP_ITEMS, SEASONAL_ITEMS, GRID_SIZE, GRID_COLS } from '@/types/room';
 
 interface RoomGridProps {
   placedItems: { itemId: string; gridPosition: number }[];
@@ -9,11 +9,12 @@ interface RoomGridProps {
 
 export function RoomGrid({ placedItems, selectedItemId, onCellClick }: RoomGridProps) {
   const cells = Array.from({ length: GRID_SIZE }, (_, i) => i);
+  const allItems = [...SHOP_ITEMS, ...SEASONAL_ITEMS];
   
   const getItemAtPosition = (position: number) => {
     const placed = placedItems.find(p => p.gridPosition === position);
     if (!placed) return null;
-    return SHOP_ITEMS.find(i => i.id === placed.itemId);
+    return allItems.find(i => i.id === placed.itemId);
   };
 
   return (

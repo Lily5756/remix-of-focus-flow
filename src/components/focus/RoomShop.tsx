@@ -1,9 +1,15 @@
-import { useState } from 'react';
-import { X, Lock, Check, Coins } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { X, Lock, Check, Coins, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SHOP_ITEMS, RoomItem } from '@/types/room';
+import { 
+  RoomItem, 
+  ItemCategory,
+  getCurrentSeason, 
+  SEASON_INFO,
+  getAvailableShopItems 
+} from '@/types/room';
 
-type Category = 'essentials' | 'comfort' | 'decor' | 'special';
+type Category = ItemCategory;
 
 interface RoomShopProps {
   focusPoints: number;
@@ -20,6 +26,7 @@ const CATEGORY_LABELS: Record<Category, { label: string; emoji: string }> = {
   comfort: { label: 'Comfort', emoji: '🪑' },
   decor: { label: 'Decor', emoji: '✨' },
   special: { label: 'Special', emoji: '🔮' },
+  seasonal: { label: 'Seasonal', emoji: '🎁' },
 };
 
 export function RoomShop({
@@ -33,8 +40,12 @@ export function RoomShop({
 }: RoomShopProps) {
   const [activeCategory, setActiveCategory] = useState<Category>('essentials');
   
-  const categories: Category[] = ['essentials', 'comfort', 'decor', 'special'];
-  const categoryItems = SHOP_ITEMS.filter(item => item.category === activeCategory);
+  const currentSeason = useMemo(() => getCurrentSeason(), []);
+  const seasonInfo = SEASON_INFO[currentSeason];
+  const availableItems = useMemo(() => getAvailableShopItems(), []);
+  
+  const categories: Category[] = ['essentials', 'comfort', 'decor', 'special', 'seasonal'];
+  const categoryItems = availableItems.filter(item => item.category === activeCategory);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
@@ -89,13 +100,32 @@ export function RoomShop({
           ))}
         </div>
         
+        {/* Seasonal banner - show when on seasonal tab */}
+        {activeCategory === 'seasonal' && (
+          <div className="mx-4 mt-3 p-3 rounded-xl bg-primary/10 border border-primary/20">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">{seasonInfo.emoji} {seasonInfo.label}</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {seasonInfo.description} Limited time items refresh each season.
+            </p>
+          </div>
+        )}
+        
         {/* Items grid */}
         <div className="p-4 overflow-y-auto max-h-[50vh]">
+          {categoryItems.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <p className="text-sm">No items available in this category</p>
+            </div>
+          ) : (
           <div className="grid grid-cols-2 gap-3">
             {categoryItems.map(item => {
               const isUnlocked = isItemUnlocked(item, longestStreak);
               const isOwned = ownsItem(item.id);
               const canAfford = focusPoints >= item.cost;
+              const isSeasonal = item.category === 'seasonal';
               
               return (
                 <button
@@ -111,9 +141,17 @@ export function RoomShop({
                     isOwned && "border-accent bg-accent/50",
                     !isOwned && isUnlocked && canAfford && "border-primary/50 bg-primary/5 hover:border-primary hover:scale-[1.02]",
                     !isOwned && isUnlocked && !canAfford && "border-border bg-muted/30 opacity-60",
-                    !isUnlocked && "border-border bg-muted/30 opacity-50"
+                    !isUnlocked && "border-border bg-muted/30 opacity-50",
+                    isSeasonal && !isOwned && isUnlocked && canAfford && "ring-2 ring-primary/20"
                   )}
                 >
+                  {/* Seasonal badge */}
+                  {isSeasonal && !isOwned && (
+                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-full bg-primary/20 text-[10px] font-medium text-primary">
+                      {seasonInfo.emoji}
+                    </div>
+                  )}
+                  
                   {/* Lock indicator */}
                   {!isUnlocked && (
                     <div className="absolute top-2 right-2">
@@ -154,6 +192,7 @@ export function RoomShop({
               );
             })}
           </div>
+          )}
         </div>
       </div>
     </div>

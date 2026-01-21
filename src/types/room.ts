@@ -1,12 +1,16 @@
 // Room Builder Gamification Types
 
+export type Season = 'winter' | 'spring' | 'summer' | 'autumn';
+export type ItemCategory = 'essentials' | 'comfort' | 'decor' | 'special' | 'seasonal';
+
 export interface RoomItem {
   id: string;
   name: string;
   emoji: string;
   cost: number;
-  category: 'essentials' | 'comfort' | 'decor' | 'special';
+  category: ItemCategory;
   unlockCondition?: UnlockCondition;
+  season?: Season; // Only for seasonal items
 }
 
 export interface UnlockCondition {
@@ -14,6 +18,22 @@ export interface UnlockCondition {
   value: number;
   description: string;
 }
+
+// Get current season based on month
+export function getCurrentSeason(): Season {
+  const month = new Date().getMonth(); // 0-11
+  if (month >= 2 && month <= 4) return 'spring';   // Mar-May
+  if (month >= 5 && month <= 7) return 'summer';   // Jun-Aug
+  if (month >= 8 && month <= 10) return 'autumn';  // Sep-Nov
+  return 'winter'; // Dec-Feb
+}
+
+export const SEASON_INFO: Record<Season, { label: string; emoji: string; description: string }> = {
+  winter: { label: 'Winter Cozy', emoji: '❄️', description: 'Warm up your room!' },
+  spring: { label: 'Spring Bloom', emoji: '🌸', description: 'Fresh and floral!' },
+  summer: { label: 'Summer Vibes', emoji: '☀️', description: 'Bright and breezy!' },
+  autumn: { label: 'Autumn Harvest', emoji: '🍂', description: 'Cozy fall feels!' },
+};
 
 export interface OwnedItem {
   itemId: string;
@@ -94,6 +114,48 @@ export const SHOP_ITEMS: RoomItem[] = [
     unlockCondition: { type: 'streak', value: 14, description: '14-day streak' }
   },
 ];
+
+// Seasonal items - rotate based on time of year
+export const SEASONAL_ITEMS: RoomItem[] = [
+  // Winter Cozy ❄️ (Dec-Feb)
+  { id: 'winter-fireplace', name: 'Cozy Fireplace', emoji: '🔥', cost: 120, category: 'seasonal', season: 'winter' },
+  { id: 'winter-hot-cocoa', name: 'Hot Cocoa', emoji: '☕', cost: 45, category: 'seasonal', season: 'winter' },
+  { id: 'winter-snowglobe', name: 'Snow Globe', emoji: '🔮', cost: 80, category: 'seasonal', season: 'winter' },
+  { id: 'winter-blanket', name: 'Fuzzy Blanket', emoji: '🧣', cost: 55, category: 'seasonal', season: 'winter' },
+  { id: 'winter-tree', name: 'Holiday Tree', emoji: '🎄', cost: 150, category: 'seasonal', season: 'winter' },
+  { id: 'winter-candles', name: 'Warm Candles', emoji: '🕯️', cost: 35, category: 'seasonal', season: 'winter' },
+  
+  // Spring Bloom 🌸 (Mar-May)
+  { id: 'spring-flowers', name: 'Cherry Blossoms', emoji: '🌸', cost: 60, category: 'seasonal', season: 'spring' },
+  { id: 'spring-butterfly', name: 'Butterfly Garden', emoji: '🦋', cost: 85, category: 'seasonal', season: 'spring' },
+  { id: 'spring-bunny', name: 'Bunny Plush', emoji: '🐰', cost: 70, category: 'seasonal', season: 'spring' },
+  { id: 'spring-eggs', name: 'Painted Eggs', emoji: '🥚', cost: 40, category: 'seasonal', season: 'spring' },
+  { id: 'spring-tulips', name: 'Tulip Vase', emoji: '🌷', cost: 50, category: 'seasonal', season: 'spring' },
+  { id: 'spring-rainbow', name: 'Rainbow Decal', emoji: '🌈', cost: 95, category: 'seasonal', season: 'spring' },
+  
+  // Summer Vibes ☀️ (Jun-Aug)
+  { id: 'summer-beach', name: 'Beach Ball', emoji: '🏖️', cost: 45, category: 'seasonal', season: 'summer' },
+  { id: 'summer-lemonade', name: 'Lemonade Stand', emoji: '🍋', cost: 75, category: 'seasonal', season: 'summer' },
+  { id: 'summer-palm', name: 'Mini Palm', emoji: '🌴', cost: 90, category: 'seasonal', season: 'summer' },
+  { id: 'summer-sunflower', name: 'Sunflower Pot', emoji: '🌻', cost: 55, category: 'seasonal', season: 'summer' },
+  { id: 'summer-hammock', name: 'Cozy Hammock', emoji: '🏝️', cost: 130, category: 'seasonal', season: 'summer' },
+  { id: 'summer-icecream', name: 'Ice Cream Cone', emoji: '🍦', cost: 35, category: 'seasonal', season: 'summer' },
+  
+  // Autumn Harvest 🍂 (Sep-Nov)
+  { id: 'autumn-pumpkin', name: 'Pumpkin Patch', emoji: '🎃', cost: 65, category: 'seasonal', season: 'autumn' },
+  { id: 'autumn-leaves', name: 'Leaf Pile', emoji: '🍁', cost: 40, category: 'seasonal', season: 'autumn' },
+  { id: 'autumn-pie', name: 'Warm Pie', emoji: '🥧', cost: 50, category: 'seasonal', season: 'autumn' },
+  { id: 'autumn-sweater', name: 'Cozy Sweater', emoji: '🧥', cost: 70, category: 'seasonal', season: 'autumn' },
+  { id: 'autumn-acorn', name: 'Acorn Basket', emoji: '🌰', cost: 35, category: 'seasonal', season: 'autumn' },
+  { id: 'autumn-crow', name: 'Friendly Crow', emoji: '🐦‍⬛', cost: 85, category: 'seasonal', season: 'autumn' },
+];
+
+// Combined items for shop
+export function getAvailableShopItems(): RoomItem[] {
+  const currentSeason = getCurrentSeason();
+  const seasonalForNow = SEASONAL_ITEMS.filter(item => item.season === currentSeason);
+  return [...SHOP_ITEMS, ...seasonalForNow];
+}
 
 export const GRID_SIZE = 16; // 4x4 grid
 export const GRID_COLS = 4;

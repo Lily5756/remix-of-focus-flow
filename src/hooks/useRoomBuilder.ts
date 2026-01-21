@@ -5,9 +5,11 @@ import {
   OwnedItem, 
   PlacedItem, 
   SHOP_ITEMS, 
+  SEASONAL_ITEMS,
   POINTS_CONFIG,
   PointsEarned,
-  RoomItem 
+  RoomItem,
+  getAvailableShopItems
 } from '@/types/room';
 
 const DEFAULT_ROOM_STATE: RoomState = {
@@ -76,7 +78,9 @@ export function useRoomBuilder() {
 
   // Purchase an item
   const purchaseItem = useCallback((itemId: string): { success: boolean; message: string } => {
-    const item = SHOP_ITEMS.find(i => i.id === itemId);
+    // Search in both regular and seasonal items
+    const allItems = [...SHOP_ITEMS, ...SEASONAL_ITEMS];
+    const item = allItems.find(i => i.id === itemId);
     if (!item) {
       return { success: false, message: 'Item not found' };
     }
@@ -140,15 +144,17 @@ export function useRoomBuilder() {
   const getItemAtPosition = useCallback((gridPosition: number): RoomItem | null => {
     const placed = roomState.placedItems.find(p => p.gridPosition === gridPosition);
     if (!placed) return null;
-    return SHOP_ITEMS.find(i => i.id === placed.itemId) || null;
+    const allItems = [...SHOP_ITEMS, ...SEASONAL_ITEMS];
+    return allItems.find(i => i.id === placed.itemId) || null;
   }, [roomState.placedItems]);
 
   // Get owned items that are not placed
   const unplacedOwnedItems = useMemo(() => {
+    const allItems = [...SHOP_ITEMS, ...SEASONAL_ITEMS];
     const placedItemIds = new Set(roomState.placedItems.map(p => p.itemId));
     return roomState.ownedItems
       .filter(o => !placedItemIds.has(o.itemId))
-      .map(o => SHOP_ITEMS.find(i => i.id === o.itemId))
+      .map(o => allItems.find(i => i.id === o.itemId))
       .filter((i): i is RoomItem => i !== undefined);
   }, [roomState.ownedItems, roomState.placedItems]);
 

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Store, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RoomGrid } from './RoomGrid';
 import { RoomShop } from './RoomShop';
-import { SHOP_ITEMS, RoomItem, GRID_SIZE } from '@/types/room';
+import { RoomPet } from './RoomPet';
+import { RoomItem } from '@/types/room';
 
 interface RoomViewProps {
   focusPoints: number;
@@ -78,6 +79,9 @@ export function RoomView({
   };
 
   const hasItems = ownedItems.length > 0;
+  
+  // Check if user owns a cat bed to show the pet
+  const hasCatBed = useMemo(() => ownsItem('cat-bed'), [ownsItem]);
 
   return (
     <div className="flex flex-col h-full px-4">
@@ -121,11 +125,16 @@ export function RoomView({
           </div>
         ) : (
           <>
-            <RoomGrid
-              placedItems={placedItems}
-              selectedItemId={selectedItem?.id}
-              onCellClick={handleGridCellClick}
-            />
+            <div className="relative w-full max-w-sm">
+              <RoomGrid
+                placedItems={placedItems}
+                selectedItemId={selectedItem?.id}
+                onCellClick={handleGridCellClick}
+              />
+              
+              {/* Cozy cat pet - appears when cat bed is owned */}
+              <RoomPet petType="cat" isVisible={hasCatBed} />
+            </div>
             
             {/* Unplaced items inventory */}
             {unplacedOwnedItems.length > 0 && (

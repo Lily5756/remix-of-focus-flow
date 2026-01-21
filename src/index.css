@@ -505,4 +505,88 @@
   .animate-slide-up {
     animation: slide-up 0.3s ease-out forwards;
   }
+
+  /* Pet idle animations */
+  @keyframes pet-sleep {
+    0%, 100% {
+      transform: translateY(0) rotate(-5deg);
+    }
+    50% {
+      transform: translateY(2px) rotate(-5deg);
+    }
+  }
+
+  @keyframes pet-idle {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    25% {
+      transform: translateY(-2px);
+    }
+    75% {
+      transform: translateY(1px);
+    }
+  }
+
+  @keyframes pet-stretch {
+    0% {
+      transform: scaleX(1) scaleY(1);
+    }
+    30% {
+      transform: scaleX(1.2) scaleY(0.8);
+    }
+    60% {
+      transform: scaleX(0.9) scaleY(1.1);
+    }
+    100% {
+      transform: scaleX(1) scaleY(1);
+    }
+  }
+
+  @keyframes pet-groom {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(10deg);
+    }
+    75% {
+      transform: rotate(-10deg);
+    }
+  }
+
+  @keyframes pet-play {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-8px) rotate(5deg);
+    }
+    50% {
+      transform: translateY(0) rotate(-5deg);
+    }
+    75% {
+      transform: translateY(-5px) rotate(3deg);
+    }
+  }
+
+  .animate-pet-sleep {
+    animation: pet-sleep 2s ease-in-out infinite;
+  }
+
+  .animate-pet-idle {
+    animation: pet-idle 3s ease-in-out infinite;
+  }
+
+  .animate-pet-stretch {
+    animation: pet-stretch 1.5s ease-in-out infinite;
+  }
+
+  .animate-pet-groom {
+    animation: pet-groom 1s ease-in-out infinite;
+  }
+
+  .animate-pet-play {
+    animation: pet-play 0.8s ease-in-out infinite;
+  }
 }

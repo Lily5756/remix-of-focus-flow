@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
-import { Store, Coins } from 'lucide-react';
+import { Store, Coins, Gift } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RoomGrid } from './RoomGrid';
 import { RoomShop } from './RoomShop';
 import { RoomPet } from './RoomPet';
-import { RoomItem } from '@/types/room';
+import { ShareRewardsModal } from './ShareRewardsModal';
+import { RoomItem, ClaimedReward } from '@/types/room';
 
 interface RoomViewProps {
   focusPoints: number;
@@ -14,11 +15,14 @@ interface RoomViewProps {
   placedItems: { itemId: string; gridPosition: number }[];
   unplacedOwnedItems: RoomItem[];
   isTimerActive: boolean;
+  appUrl: string;
   onPurchase: (itemId: string) => { success: boolean; message: string };
   onPlaceItem: (itemId: string, gridPosition: number) => boolean;
   onRemoveItem: (gridPosition: number) => void;
   isItemUnlocked: (item: RoomItem, longestStreak: number) => boolean;
   ownsItem: (itemId: string) => boolean;
+  onClaimReward: (rewardType: ClaimedReward['type']) => { success: boolean; points: number };
+  hasClaimedReward: (rewardType: ClaimedReward['type']) => boolean;
 }
 
 export function RoomView({
@@ -29,13 +33,17 @@ export function RoomView({
   placedItems,
   unplacedOwnedItems,
   isTimerActive,
+  appUrl,
   onPurchase,
   onPlaceItem,
   onRemoveItem,
   isItemUnlocked,
   ownsItem,
+  onClaimReward,
+  hasClaimedReward,
 }: RoomViewProps) {
   const [showShop, setShowShop] = useState(false);
+  const [showShareRewards, setShowShareRewards] = useState(false);
   const [selectedItem, setSelectedItem] = useState<RoomItem | null>(null);
   const [shopMessage, setShopMessage] = useState<string | null>(null);
 
@@ -93,18 +101,31 @@ export function RoomView({
             {focusPoints} FP
           </span>
         </div>
-        
-        <button
-          onClick={handleShopOpen}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-full transition-all",
-            "bg-primary text-primary-foreground hover:opacity-90",
-            isTimerActive && "opacity-50"
-          )}
-        >
-          <Store className="w-4 h-4" />
-          <span className="text-sm font-medium">Shop</span>
-        </button>
+
+        <div className="flex items-center gap-2">
+          {/* Share rewards button */}
+          <button
+            onClick={() => setShowShareRewards(true)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-accent hover:bg-accent/80 transition-colors"
+            title="Earn Focus Points"
+          >
+            <Gift className="w-4 h-4 text-primary" />
+            <span className="text-xs font-medium text-primary hidden sm:inline">Earn</span>
+          </button>
+          
+          {/* Shop button */}
+          <button
+            onClick={handleShopOpen}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2 rounded-full transition-all",
+              "bg-primary text-primary-foreground hover:opacity-90",
+              isTimerActive && "opacity-50"
+            )}
+          >
+            <Store className="w-4 h-4" />
+            <span className="text-sm font-medium">Shop</span>
+          </button>
+        </div>
       </div>
 
       {/* Message display */}
@@ -179,6 +200,16 @@ export function RoomView({
           onPurchase={handlePurchase}
           isItemUnlocked={isItemUnlocked}
           ownsItem={ownsItem}
+        />
+      )}
+
+      {/* Share rewards modal */}
+      {showShareRewards && (
+        <ShareRewardsModal
+          onClose={() => setShowShareRewards(false)}
+          onClaimReward={onClaimReward}
+          hasClaimedReward={hasClaimedReward}
+          appUrl={appUrl}
         />
       )}
     </div>

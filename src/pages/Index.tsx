@@ -261,11 +261,14 @@ export default function Index() {
             placedItems={roomBuilder.placedItems}
             unplacedOwnedItems={roomBuilder.unplacedOwnedItems}
             isTimerActive={isTimerActive}
+            appUrl="https://calmodoro.lovable.app"
             onPurchase={roomBuilder.purchaseItem}
             onPlaceItem={roomBuilder.placeItem}
             onRemoveItem={roomBuilder.removeItemFromGrid}
             isItemUnlocked={roomBuilder.isItemUnlocked}
             ownsItem={roomBuilder.ownsItem}
+            onClaimReward={roomBuilder.claimSharingReward}
+            hasClaimedReward={roomBuilder.hasClaimedReward}
           />
         </main>
       )}

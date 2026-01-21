@@ -51,7 +51,22 @@ export interface RoomState {
   totalCompletedPomodoros: number;
   ownedItems: OwnedItem[];
   placedItems: PlacedItem[];
+  hasClaimedWelcomeBonus: boolean;
+  claimedRewards: ClaimedReward[];
 }
+
+export interface ClaimedReward {
+  type: 'message_share' | 'social_share' | 'rating_feedback';
+  claimedAt: number;
+}
+
+export const SHARING_REWARDS = {
+  MESSAGE_SHARE: { type: 'message_share' as const, points: 200, label: 'Share via Message', emoji: '💬' },
+  SOCIAL_SHARE: { type: 'social_share' as const, points: 500, label: 'Share on Social Media', emoji: '📱' },
+  RATING_FEEDBACK: { type: 'rating_feedback' as const, points: 1000, label: 'Rate & Give Feedback', emoji: '⭐' },
+};
+
+export const WELCOME_BONUS = 1000;
 
 export interface PointsEarned {
   base: number;

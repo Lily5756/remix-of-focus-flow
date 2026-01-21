@@ -74,11 +74,35 @@ export const SHOP_ITEMS: RoomItem[] = [
   { id: 'bookshelf', name: 'Bookshelf', emoji: '📚', cost: 90, category: 'comfort' },
   { id: 'big-plant', name: 'Big Plant', emoji: '🪴', cost: 100, category: 'comfort' },
   
+  // Beds - Various styles and aesthetics
+  { id: 'bed-simple', name: 'Simple Bed', emoji: '🛏️', cost: 120, category: 'comfort' },
+  { id: 'bed-pink', name: 'Pink Dream Bed', emoji: '🎀', cost: 150, category: 'comfort' },
+  { id: 'bed-blue', name: 'Ocean Blue Bed', emoji: '🌊', cost: 150, category: 'comfort' },
+  { id: 'bed-purple', name: 'Lavender Bed', emoji: '💜', cost: 160, category: 'comfort' },
+  { id: 'bed-green', name: 'Forest Bed', emoji: '🌲', cost: 160, category: 'comfort' },
+  { id: 'bed-royal', name: 'Royal Canopy', emoji: '👑', cost: 250, category: 'comfort' },
+  { id: 'bed-modern', name: 'Modern Platform', emoji: '🖤', cost: 200, category: 'comfort' },
+  { id: 'bed-cozy', name: 'Cozy Cottage', emoji: '🧸', cost: 180, category: 'comfort' },
+  { id: 'bed-sports', name: 'Sports Bed', emoji: '⚽', cost: 170, category: 'comfort' },
+  { id: 'bed-gamer', name: 'Gamer Setup Bed', emoji: '🎮', cost: 220, category: 'comfort' },
+  { id: 'bed-princess', name: 'Princess Bed', emoji: '👸', cost: 240, category: 'comfort' },
+  { id: 'bed-space', name: 'Space Explorer', emoji: '🚀', cost: 230, category: 'comfort' },
+  
   // Decor
   { id: 'clock', name: 'Wall Clock', emoji: '🕰️', cost: 70, category: 'decor' },
   { id: 'sofa', name: 'Cozy Sofa', emoji: '🛋️', cost: 180, category: 'decor' },
   { id: 'neon-sign', name: 'Neon Sign', emoji: '✨', cost: 200, category: 'decor' },
   { id: 'cat-bed', name: 'Cat Bed', emoji: '🐾', cost: 220, category: 'decor' },
+  
+  // Matching decor for bed themes
+  { id: 'decor-fairy-lights', name: 'Fairy Lights', emoji: '💫', cost: 45, category: 'decor' },
+  { id: 'decor-dreamcatcher', name: 'Dreamcatcher', emoji: '🪶', cost: 55, category: 'decor' },
+  { id: 'decor-galaxy-lamp', name: 'Galaxy Lamp', emoji: '🔮', cost: 85, category: 'decor' },
+  { id: 'decor-heart-pillow', name: 'Heart Pillow', emoji: '💕', cost: 40, category: 'decor' },
+  { id: 'decor-sports-trophy', name: 'Sports Trophy', emoji: '🏅', cost: 65, category: 'decor' },
+  { id: 'decor-gaming-chair', name: 'Gaming Chair', emoji: '🎯', cost: 95, category: 'decor' },
+  { id: 'decor-crown', name: 'Wall Crown', emoji: '👑', cost: 75, category: 'decor' },
+  { id: 'decor-stars', name: 'Star Garland', emoji: '⭐', cost: 50, category: 'decor' },
   
   // Special (locked)
   { 

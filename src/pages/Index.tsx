@@ -66,6 +66,9 @@ export default function Index() {
     setCustomAvatar,
     lastPointsEarned,
     roomBuilder,
+    syncStatus,
+    syncNow,
+    restoreFromCloud,
   } = useFocusApp();
 
   const avatarSrc = getAvatarSrc(avatarId, customAvatar);
@@ -283,7 +286,10 @@ export default function Index() {
         <main className="flex-1 flex flex-col pb-8">
           <SettingsView 
             userName={userName} 
-            onUpdateName={setUserName} 
+            onUpdateName={setUserName}
+            syncStatus={syncStatus}
+            onSyncNow={syncNow}
+            onRestoreFromCloud={restoreFromCloud}
           />
         </main>
       )}

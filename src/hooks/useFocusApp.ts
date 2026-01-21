@@ -1,11 +1,13 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { useTimer } from './useTimer';
 import { useSound } from './useSound';
 import { useStreakCelebration, getMilestoneMessage, STREAK_MILESTONES } from './useStreakCelebration';
 import { useRoomBuilder } from './useRoomBuilder';
+import { useCloudSync, CloudData } from './useCloudSync';
+import { useAuth } from './useAuth';
 import { Task, FocusSession, UserPreferences, StreakData, FOCUS_DURATIONS } from '@/types/focus';
-import { PointsEarned } from '@/types/room';
+import { PointsEarned, RoomState, WELCOME_BONUS } from '@/types/room';
 
 const getToday = () => new Date().toISOString().split('T')[0];
 
@@ -48,6 +50,67 @@ export function useFocusApp() {
   const { playChime } = useSound();
   const { celebrate } = useStreakCelebration();
   const roomBuilder = useRoomBuilder();
+  const { user, isAuthenticated } = useAuth();
+
+  // Cloud sync - restore data when user logs in
+  const handleDataRestored = useCallback((data: CloudData) => {
+    if (data.tasks && data.tasks.length > 0) {
+      setTasks(data.tasks);
+    }
+    if (data.sessions && data.sessions.length > 0) {
+      setSessions(data.sessions);
+    }
+    if (data.preferences && Object.keys(data.preferences).length > 0) {
+      setPreferences(data.preferences);
+      if (data.preferences.userName) {
+        // Update local state
+      }
+    }
+    if (data.streakData && Object.keys(data.streakData).length > 0) {
+      setStreakData(data.streakData);
+    }
+  }, [setTasks, setSessions, setPreferences, setStreakData]);
+
+  const cloudSync = useCloudSync({ onDataRestored: handleDataRestored });
+
+  // Build current data for syncing
+  const buildSyncData = useCallback((): CloudData => ({
+    tasks,
+    sessions,
+    preferences,
+    streakData,
+    roomState: {
+      focusPoints: roomBuilder.focusPoints,
+      lifetimeFocusPoints: roomBuilder.lifetimeFocusPoints,
+      totalCompletedPomodoros: roomBuilder.totalCompletedPomodoros,
+      ownedItems: roomBuilder.ownedItems,
+      placedItems: roomBuilder.placedItems,
+      hasClaimedWelcomeBonus: true,
+      claimedRewards: roomBuilder.claimedRewards,
+    },
+    updatedAt: new Date().toISOString(),
+  }), [tasks, sessions, preferences, streakData, roomBuilder]);
+
+  // Auto-sync when authenticated and data changes
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      cloudSync.debouncedSync(buildSyncData());
+    }
+  }, [tasks, sessions, preferences, streakData, roomBuilder.focusPoints, roomBuilder.ownedItems, roomBuilder.placedItems, isAuthenticated, user]);
+
+  // Check and restore cloud data on login
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      cloudSync.checkCloudData().then(hasData => {
+        if (hasData) {
+          cloudSync.restoreFromCloud();
+        } else {
+          // Initialize cloud with local data
+          cloudSync.initializeCloudData(buildSyncData());
+        }
+      });
+    }
+  }, [isAuthenticated, user?.id]);
 
   const handleFocusComplete = useCallback(() => {
     playChime();
@@ -290,6 +353,15 @@ export function useFocusApp() {
     setPreferences(prev => ({ ...prev, customAvatar: dataUrl, avatarId: null }));
   }, [setPreferences]);
 
+  // Sync functions for settings
+  const syncNow = useCallback(async () => {
+    await cloudSync.syncNow(buildSyncData());
+  }, [cloudSync, buildSyncData]);
+
+  const restoreFromCloud = useCallback(async () => {
+    await cloudSync.restoreFromCloud();
+  }, [cloudSync]);
+
   return {
     // State
     tasks: incompleteTasks,
@@ -309,6 +381,13 @@ export function useFocusApp() {
     
     // Room Builder
     roomBuilder,
+    
+    // Cloud Sync
+    syncStatus: cloudSync.syncStatus,
+    syncNow,
+    restoreFromCloud,
+    
+    // Actions
     addTask,
     selectTask,
     completeTask,

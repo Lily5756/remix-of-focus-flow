@@ -23,6 +23,8 @@ import { AmbientEffects } from '@/components/focus/AmbientEffects';
 import { TaskDetailModal } from '@/components/focus/TaskDetailModal';
 import { AvatarSelector, getAvatarSrc } from '@/components/focus/AvatarSelector';
 import { MilestoneCelebration } from '@/components/focus/MilestoneCelebration';
+import { RoomView } from '@/components/focus/RoomView';
+import { PointsToast } from '@/components/focus/PointsToast';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
@@ -62,6 +64,8 @@ export default function Index() {
     setUserName,
     setAvatarId,
     setCustomAvatar,
+    lastPointsEarned,
+    roomBuilder,
   } = useFocusApp();
 
   const avatarSrc = getAvatarSrc(avatarId, customAvatar);
@@ -124,6 +128,9 @@ export default function Index() {
 
       {/* Milestone celebration */}
       <MilestoneCelebration message={milestoneMessage} />
+
+      {/* Points earned toast */}
+      <PointsToast points={lastPointsEarned} />
 
       {/* Header with profile, streak and theme toggle */}
       <header className="pt-6 pb-2 px-4 flex items-center justify-between">
@@ -241,6 +248,25 @@ export default function Index() {
       {activeTab === 'calendar' && (
         <main className="flex-1 flex flex-col px-2 pb-8">
           <CalendarView />
+        </main>
+      )}
+
+      {activeTab === 'room' && (
+        <main className="flex-1 flex flex-col pb-8">
+          <RoomView
+            focusPoints={roomBuilder.focusPoints}
+            totalCompletedPomodoros={roomBuilder.totalCompletedPomodoros}
+            longestStreak={streakData.longestStreak}
+            ownedItems={roomBuilder.ownedItems}
+            placedItems={roomBuilder.placedItems}
+            unplacedOwnedItems={roomBuilder.unplacedOwnedItems}
+            isTimerActive={isTimerActive}
+            onPurchase={roomBuilder.purchaseItem}
+            onPlaceItem={roomBuilder.placeItem}
+            onRemoveItem={roomBuilder.removeItemFromGrid}
+            isItemUnlocked={roomBuilder.isItemUnlocked}
+            ownsItem={roomBuilder.ownsItem}
+          />
         </main>
       )}
 

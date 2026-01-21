@@ -3,7 +3,9 @@ import { useLocalStorage } from './useLocalStorage';
 import { useTimer } from './useTimer';
 import { useSound } from './useSound';
 import { useStreakCelebration, getMilestoneMessage, STREAK_MILESTONES } from './useStreakCelebration';
+import { useRoomBuilder } from './useRoomBuilder';
 import { Task, FocusSession, UserPreferences, StreakData, FOCUS_DURATIONS } from '@/types/focus';
+import { PointsEarned } from '@/types/room';
 
 const getToday = () => new Date().toISOString().split('T')[0];
 
@@ -41,9 +43,11 @@ export function useFocusApp() {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [encouragement, setEncouragement] = useState<string | null>(null);
   const [milestoneMessage, setMilestoneMessage] = useState<string | null>(null);
+  const [lastPointsEarned, setLastPointsEarned] = useState<PointsEarned | null>(null);
   
   const { playChime } = useSound();
   const { celebrate } = useStreakCelebration();
+  const roomBuilder = useRoomBuilder();
 
   const handleFocusComplete = useCallback(() => {
     playChime();
@@ -157,6 +161,12 @@ export function useFocusApp() {
     if (!currentSessionId) return;
     
     const today = getToday();
+    const didReflect = answer === 'yes';
+    
+    // Award Focus Points
+    const pointsEarned = roomBuilder.awardPoints(didReflect);
+    setLastPointsEarned(pointsEarned);
+    setTimeout(() => setLastPointsEarned(null), 4000);
     
     // Update session with reflection
     setSessions(prev => prev.map(s => 
@@ -246,13 +256,18 @@ export function useFocusApp() {
     setShowReflection(false);
     setCurrentSessionId(null);
     timer.startBreak();
-  }, [currentSessionId, activeTaskId, selectedDuration, setSessions, setTasks, setPreferences, setStreakData, timer, celebrate]);
+  }, [currentSessionId, activeTaskId, selectedDuration, setSessions, setTasks, setPreferences, setStreakData, timer, celebrate, roomBuilder]);
 
   const skipReflection = useCallback(() => {
+    // Award points even when skipping (no reflection bonus)
+    const pointsEarned = roomBuilder.awardPoints(false);
+    setLastPointsEarned(pointsEarned);
+    setTimeout(() => setLastPointsEarned(null), 4000);
+    
     setShowReflection(false);
     setCurrentSessionId(null);
     timer.startBreak();
-  }, [timer]);
+  }, [timer, roomBuilder]);
 
   const endSession = useCallback(() => {
     timer.stop();
@@ -290,8 +305,10 @@ export function useFocusApp() {
     userName,
     avatarId,
     customAvatar,
+    lastPointsEarned,
     
-    // Actions
+    // Room Builder
+    roomBuilder,
     addTask,
     selectTask,
     completeTask,

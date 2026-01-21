@@ -1,7 +1,7 @@
-import { Timer, Calendar, ListTodo, Settings, BarChart3 } from 'lucide-react';
+import { Timer, Calendar, ListTodo, Settings, BarChart3, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export type Tab = 'focus' | 'calendar' | 'tasks' | 'report' | 'settings';
+export type Tab = 'focus' | 'tasks' | 'room' | 'calendar' | 'report' | 'settings';
 
 interface TabNavigationProps {
   activeTab: Tab;
@@ -12,6 +12,7 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   const tabs = [
     { id: 'focus' as Tab, label: 'Focus', icon: Timer },
     { id: 'tasks' as Tab, label: 'Tasks', icon: ListTodo },
+    { id: 'room' as Tab, label: 'Room', icon: Home },
     { id: 'calendar' as Tab, label: 'Calendar', icon: Calendar },
     { id: 'report' as Tab, label: 'Report', icon: BarChart3 },
     { id: 'settings' as Tab, label: 'Settings', icon: Settings },

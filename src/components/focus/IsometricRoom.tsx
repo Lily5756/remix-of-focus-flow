@@ -114,21 +114,20 @@ export function IsometricRoom({
           {/* Wall corner edge */}
           <line x1="150" y1="0" x2="150" y2="60" stroke="currentColor" strokeWidth="2" className="text-foreground/5" />
           
-          {/* Window on right wall */}
-          <g transform="translate(195, 15)">
-            <rect x="0" y="0" width="50" height="40" rx="2" className="fill-[hsl(200,60%,80%)] dark:fill-[hsl(220,30%,40%)]" />
+          {/* Window on right wall - smaller, realistic proportion */}
+          <g transform="translate(200, 22)">
+            <rect x="0" y="0" width="28" height="22" rx="1" className="fill-[hsl(200,60%,85%)] dark:fill-[hsl(220,30%,45%)]" />
             {/* Window frame */}
-            <rect x="0" y="0" width="50" height="40" rx="2" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground/20" />
+            <rect x="0" y="0" width="28" height="22" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground/25" />
             {/* Window panes */}
-            <line x1="25" y1="0" x2="25" y2="40" stroke="currentColor" strokeWidth="1.5" className="text-foreground/20" />
-            <line x1="0" y1="13" x2="50" y2="13" stroke="currentColor" strokeWidth="1.5" className="text-foreground/20" />
-            <line x1="0" y1="26" x2="50" y2="26" stroke="currentColor" strokeWidth="1.5" className="text-foreground/20" />
+            <line x1="14" y1="0" x2="14" y2="22" stroke="currentColor" strokeWidth="1" className="text-foreground/20" />
+            <line x1="0" y1="11" x2="28" y2="11" stroke="currentColor" strokeWidth="1" className="text-foreground/20" />
           </g>
           
-          {/* Wall art on left wall */}
-          <g transform="translate(60, 25)">
-            <rect x="0" y="0" width="40" height="30" rx="2" className="fill-[hsl(340,30%,70%)] dark:fill-[hsl(340,25%,35%)]" />
-            <rect x="0" y="0" width="40" height="30" rx="2" fill="none" stroke="currentColor" strokeWidth="2" className="text-foreground/30" />
+          {/* Wall art on left wall - smaller frame */}
+          <g transform="translate(70, 18)">
+            <rect x="0" y="0" width="22" height="18" rx="1" className="fill-[hsl(340,30%,75%)] dark:fill-[hsl(340,25%,40%)]" />
+            <rect x="0" y="0" width="22" height="18" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground/25" />
           </g>
         </svg>
         

@@ -115,7 +115,7 @@ export function IsometricRoom({
           <line x1="150" y1="0" x2="150" y2="60" stroke="currentColor" strokeWidth="2" className="text-foreground/5" />
           
           {/* Window on right wall - centered on wall */}
-          <g transform="translate(196, 55)">
+          <g transform="translate(196, 35)">
             <rect x="0" y="0" width="30" height="24" rx="1" className="fill-[hsl(200,60%,85%)] dark:fill-[hsl(220,30%,45%)]" />
             {/* Window frame */}
             <rect x="0" y="0" width="30" height="24" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground/25" />
@@ -125,7 +125,7 @@ export function IsometricRoom({
           </g>
           
           {/* Wall art on left wall - centered on wall */}
-          <g transform="translate(75, 55)">
+          <g transform="translate(75, 35)">
             <rect x="0" y="0" width="24" height="18" rx="1" className="fill-[hsl(340,30%,75%)] dark:fill-[hsl(340,25%,40%)]" />
             <rect x="0" y="0" width="24" height="18" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground/25" />
           </g>

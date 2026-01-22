@@ -1,11 +1,13 @@
 import { useState, useMemo } from 'react';
-import { Store, Coins, Gift } from 'lucide-react';
+import { Store, Coins, Gift, Package } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { RoomGrid } from './RoomGrid';
+import { IsometricRoom } from './IsometricRoom';
 import { RoomShop } from './RoomShop';
 import { RoomPet } from './RoomPet';
+import { RoomInventory } from './RoomInventory';
+import { PlacementToolbar } from './PlacementToolbar';
 import { ShareRewardsModal } from './ShareRewardsModal';
-import { RoomItem, ClaimedReward } from '@/types/room';
+import { RoomItem, ClaimedReward, SHOP_ITEMS, SEASONAL_ITEMS } from '@/types/room';
 
 interface RoomViewProps {
   focusPoints: number;
@@ -43,9 +45,12 @@ export function RoomView({
   hasClaimedReward,
 }: RoomViewProps) {
   const [showShop, setShowShop] = useState(false);
+  const [showInventory, setShowInventory] = useState(false);
   const [showShareRewards, setShowShareRewards] = useState(false);
   const [selectedItem, setSelectedItem] = useState<RoomItem | null>(null);
   const [shopMessage, setShopMessage] = useState<string | null>(null);
+
+  const allItems = useMemo(() => [...SHOP_ITEMS, ...SEASONAL_ITEMS], []);
 
   const handleShopOpen = () => {
     if (isTimerActive) {
@@ -91,104 +96,131 @@ export function RoomView({
   // Check if user owns a cat bed to show the pet
   const hasCatBed = useMemo(() => ownsItem('cat-bed'), [ownsItem]);
 
-  return (
-    <div className="flex flex-col h-full px-4">
-      {/* Header with points and shop button */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 bg-accent px-4 py-2 rounded-full">
-          <Coins className="w-5 h-5 text-primary" />
-          <span className="font-bold text-primary">
-            {focusPoints} FP
-          </span>
-        </div>
+  const isPlacementMode = !!selectedItem;
 
-        <div className="flex items-center gap-2">
-          {/* Share rewards button */}
+  return (
+    <div className="flex flex-col h-full">
+      {/* Room Scene - Takes ~70% of screen */}
+      <div className="flex-1 relative flex flex-col items-center justify-center px-4 py-6">
+        {/* Ambient background glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-transparent to-muted/50 pointer-events-none" />
+        
+        {/* Message display */}
+        {shopMessage && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 px-4 py-2 bg-card/95 backdrop-blur-md rounded-full border border-border shadow-lg animate-fade-in">
+            <span className="text-sm">{shopMessage}</span>
+          </div>
+        )}
+
+        {!hasItems ? (
+          <div className="text-center p-8 relative z-10">
+            <div className="w-24 h-24 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+              <span className="text-5xl">🏠</span>
+            </div>
+            <h3 className="font-semibold text-lg mb-2">Your Room Awaits</h3>
+            <p className="text-muted-foreground text-sm max-w-xs mx-auto">
+              Complete Pomodoros to earn Focus Points and start decorating your cozy space!
+            </p>
+          </div>
+        ) : (
+          <div className="relative w-full max-w-sm">
+            <IsometricRoom
+              placedItems={placedItems}
+              selectedItemId={selectedItem?.id}
+              isPlacementMode={isPlacementMode}
+              onCellClick={handleGridCellClick}
+            />
+            
+            {/* Cozy cat pet - appears when cat bed is owned */}
+            <RoomPet petType="cat" isVisible={hasCatBed} />
+          </div>
+        )}
+        
+        {/* Placement mode toolbar */}
+        {isPlacementMode && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
+            <PlacementToolbar
+              selectedItem={selectedItem}
+              onCancel={() => setSelectedItem(null)}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Bottom Controls Panel */}
+      <div className={cn(
+        "relative z-10 px-4 pb-4 pt-3",
+        "bg-gradient-to-t from-background via-background to-transparent"
+      )}>
+        {/* Focus Points Badge */}
+        <div className="flex items-center justify-center mb-3">
+          <div className="flex items-center gap-2 px-4 py-2 bg-card rounded-full border border-border shadow-sm">
+            <Coins className="w-5 h-5 text-primary" />
+            <span className="font-bold text-primary">{focusPoints}</span>
+            <span className="text-xs text-muted-foreground">FP</span>
+          </div>
+        </div>
+        
+        {/* Action buttons row */}
+        <div className="flex items-center justify-center gap-3">
+          {/* Inventory button */}
           <button
-            onClick={() => setShowShareRewards(true)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-accent hover:bg-accent/80 transition-colors"
-            title="Earn Focus Points"
+            onClick={() => setShowInventory(true)}
+            disabled={unplacedOwnedItems.length === 0}
+            className={cn(
+              "flex items-center gap-2 px-5 py-3 rounded-2xl transition-all",
+              "bg-card border border-border shadow-sm",
+              "hover:shadow-md hover:border-primary/30",
+              "disabled:opacity-50 disabled:cursor-not-allowed"
+            )}
           >
-            <Gift className="w-4 h-4 text-primary" />
-            <span className="text-xs font-medium text-primary hidden sm:inline">Earn</span>
+            <Package className="w-5 h-5 text-muted-foreground" />
+            <span className="text-sm font-medium">Inventory</span>
+            {unplacedOwnedItems.length > 0 && (
+              <span className="px-1.5 py-0.5 text-xs font-bold bg-primary text-primary-foreground rounded-full">
+                {unplacedOwnedItems.length}
+              </span>
+            )}
           </button>
           
           {/* Shop button */}
           <button
             onClick={handleShopOpen}
             className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-full transition-all",
-              "bg-primary text-primary-foreground hover:opacity-90",
+              "flex items-center gap-2 px-5 py-3 rounded-2xl transition-all",
+              "bg-primary text-primary-foreground shadow-sm",
+              "hover:opacity-90 hover:shadow-md",
               isTimerActive && "opacity-50"
             )}
           >
-            <Store className="w-4 h-4" />
+            <Store className="w-5 h-5" />
             <span className="text-sm font-medium">Shop</span>
+          </button>
+          
+          {/* Earn Rewards button */}
+          <button
+            onClick={() => setShowShareRewards(true)}
+            className={cn(
+              "flex items-center gap-2 px-5 py-3 rounded-2xl transition-all",
+              "bg-card border border-border shadow-sm",
+              "hover:shadow-md hover:border-primary/30"
+            )}
+          >
+            <Gift className="w-5 h-5 text-primary" />
+            <span className="text-sm font-medium">Earn</span>
           </button>
         </div>
       </div>
 
-      {/* Message display */}
-      {shopMessage && (
-        <div className="mb-4 p-3 bg-muted rounded-xl text-center text-sm animate-fade-in">
-          {shopMessage}
-        </div>
+      {/* Inventory modal */}
+      {showInventory && (
+        <RoomInventory
+          items={unplacedOwnedItems}
+          selectedItemId={selectedItem?.id}
+          onSelectItem={handleSelectItemToPlace}
+          onClose={() => setShowInventory(false)}
+        />
       )}
-
-      {/* Room grid */}
-      <div className="flex-1 flex flex-col items-center justify-center">
-        {!hasItems ? (
-          <div className="text-center p-8">
-            <div className="text-4xl mb-4">🏠</div>
-            <p className="text-muted-foreground text-sm max-w-xs mx-auto">
-              Your room is empty 🌱 Complete a Pomodoro to earn Focus Points and start decorating!
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="relative w-full max-w-sm">
-              <RoomGrid
-                placedItems={placedItems}
-                selectedItemId={selectedItem?.id}
-                onCellClick={handleGridCellClick}
-              />
-              
-              {/* Cozy cat pet - appears when cat bed is owned */}
-              <RoomPet petType="cat" isVisible={hasCatBed} />
-            </div>
-            
-            {/* Unplaced items inventory */}
-            {unplacedOwnedItems.length > 0 && (
-              <div className="mt-6 w-full max-w-sm">
-                <p className="text-xs text-muted-foreground mb-2 text-center">
-                  {selectedItem 
-                    ? 'Tap an empty cell to place the item'
-                    : 'Tap an item below to place it'}
-                </p>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {unplacedOwnedItems.map(item => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => handleSelectItemToPlace(item)}
-                      className={cn(
-                        "w-12 h-12 rounded-xl text-2xl flex items-center justify-center transition-all",
-                        "border-2 hover:scale-110",
-                        selectedItem?.id === item.id
-                          ? "border-primary bg-primary/20 scale-110"
-                          : "border-border bg-muted/50"
-                      )}
-                      title={item.name}
-                    >
-                      {item.emoji}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        )}
-      </div>
 
       {/* Shop modal */}
       {showShop && (

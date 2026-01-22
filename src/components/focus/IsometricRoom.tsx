@@ -114,20 +114,20 @@ export function IsometricRoom({
           {/* Wall corner edge */}
           <line x1="150" y1="0" x2="150" y2="60" stroke="currentColor" strokeWidth="2" className="text-foreground/5" />
           
-          {/* Window on right wall - smaller, realistic proportion */}
-          <g transform="translate(200, 22)">
-            <rect x="0" y="0" width="28" height="22" rx="1" className="fill-[hsl(200,60%,85%)] dark:fill-[hsl(220,30%,45%)]" />
+          {/* Window on right wall - centered on wall */}
+          <g transform="translate(196, 55)">
+            <rect x="0" y="0" width="30" height="24" rx="1" className="fill-[hsl(200,60%,85%)] dark:fill-[hsl(220,30%,45%)]" />
             {/* Window frame */}
-            <rect x="0" y="0" width="28" height="22" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground/25" />
+            <rect x="0" y="0" width="30" height="24" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground/25" />
             {/* Window panes */}
-            <line x1="14" y1="0" x2="14" y2="22" stroke="currentColor" strokeWidth="1" className="text-foreground/20" />
-            <line x1="0" y1="11" x2="28" y2="11" stroke="currentColor" strokeWidth="1" className="text-foreground/20" />
+            <line x1="15" y1="0" x2="15" y2="24" stroke="currentColor" strokeWidth="1" className="text-foreground/20" />
+            <line x1="0" y1="12" x2="30" y2="12" stroke="currentColor" strokeWidth="1" className="text-foreground/20" />
           </g>
           
-          {/* Wall art on left wall - smaller frame */}
-          <g transform="translate(70, 18)">
-            <rect x="0" y="0" width="22" height="18" rx="1" className="fill-[hsl(340,30%,75%)] dark:fill-[hsl(340,25%,40%)]" />
-            <rect x="0" y="0" width="22" height="18" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground/25" />
+          {/* Wall art on left wall - centered on wall */}
+          <g transform="translate(75, 55)">
+            <rect x="0" y="0" width="24" height="18" rx="1" className="fill-[hsl(340,30%,75%)] dark:fill-[hsl(340,25%,40%)]" />
+            <rect x="0" y="0" width="24" height="18" rx="1" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-foreground/25" />
           </g>
         </svg>
         

@@ -257,6 +257,8 @@ export default function Index() {
       {activeTab === 'room' && (
         <main className="flex-1 flex flex-col pb-8">
           <RoomView
+            roomName={roomBuilder.roomName}
+            onRoomNameChange={roomBuilder.setRoomName}
             focusPoints={roomBuilder.focusPoints}
             totalCompletedPomodoros={roomBuilder.totalCompletedPomodoros}
             longestStreak={streakData.longestStreak}

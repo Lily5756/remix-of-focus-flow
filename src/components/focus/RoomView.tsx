@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Store, Coins, Gift, Package } from 'lucide-react';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { Store, Coins, Gift, Package, Pencil, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { IsometricRoom } from './IsometricRoom';
 import { RoomShop } from './RoomShop';
@@ -10,6 +10,8 @@ import { ShareRewardsModal } from './ShareRewardsModal';
 import { RoomItem, ClaimedReward, SHOP_ITEMS, SEASONAL_ITEMS } from '@/types/room';
 
 interface RoomViewProps {
+  roomName: string;
+  onRoomNameChange: (name: string) => void;
   focusPoints: number;
   totalCompletedPomodoros: number;
   longestStreak: number;
@@ -28,6 +30,8 @@ interface RoomViewProps {
 }
 
 export function RoomView({
+  roomName,
+  onRoomNameChange,
   focusPoints,
   totalCompletedPomodoros,
   longestStreak,
@@ -49,6 +53,39 @@ export function RoomView({
   const [showShareRewards, setShowShareRewards] = useState(false);
   const [selectedItem, setSelectedItem] = useState<RoomItem | null>(null);
   const [shopMessage, setShopMessage] = useState<string | null>(null);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(roomName);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditingName && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditingName]);
+
+  useEffect(() => {
+    setEditedName(roomName);
+  }, [roomName]);
+
+  const handleSaveName = () => {
+    const trimmed = editedName.trim().slice(0, 30);
+    if (trimmed) {
+      onRoomNameChange(trimmed);
+    } else {
+      setEditedName(roomName);
+    }
+    setIsEditingName(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSaveName();
+    } else if (e.key === 'Escape') {
+      setEditedName(roomName);
+      setIsEditingName(false);
+    }
+  };
 
   const allItems = useMemo(() => [...SHOP_ITEMS, ...SEASONAL_ITEMS], []);
 
@@ -100,8 +137,41 @@ export function RoomView({
 
   return (
     <div className="flex flex-col h-full">
+      {/* Room Name Header */}
+      <div className="flex items-center justify-center gap-2 pt-4 pb-2">
+        {isEditingName ? (
+          <div className="flex items-center gap-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={handleSaveName}
+              maxLength={30}
+              className="px-3 py-1.5 text-lg font-semibold text-center bg-card border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 w-48"
+              placeholder="Room name..."
+            />
+            <button
+              onClick={handleSaveName}
+              className="p-1.5 rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
+            >
+              <Check className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setIsEditingName(true)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted/50 transition-colors group"
+          >
+            <span className="text-lg font-semibold">{roomName}</span>
+            <Pencil className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+          </button>
+        )}
+      </div>
+
       {/* Room Scene - Takes ~70% of screen */}
-      <div className="flex-1 relative flex flex-col items-center justify-center px-4 py-6">
+      <div className="flex-1 relative flex flex-col items-center justify-center px-4 py-4">
         {/* Ambient background glow */}
         <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-transparent to-muted/50 pointer-events-none" />
         

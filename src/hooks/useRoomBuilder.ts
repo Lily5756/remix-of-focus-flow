@@ -16,6 +16,7 @@ import {
 } from '@/types/room';
 
 const DEFAULT_ROOM_STATE: RoomState = {
+  roomName: 'My Cozy Room',
   focusPoints: WELCOME_BONUS, // 1000 FP welcome bonus!
   lifetimeFocusPoints: WELCOME_BONUS,
   totalCompletedPomodoros: 0,
@@ -194,8 +195,17 @@ export function useRoomBuilder() {
     return { success: true, points: reward.points };
   }, [hasClaimedReward, setRoomState]);
 
+  // Set room name
+  const setRoomName = useCallback((name: string) => {
+    setRoomState(prev => ({
+      ...prev,
+      roomName: name,
+    }));
+  }, [setRoomState]);
+
   return {
     // State
+    roomName: roomState.roomName,
     focusPoints: roomState.focusPoints,
     lifetimeFocusPoints: roomState.lifetimeFocusPoints,
     totalCompletedPomodoros: roomState.totalCompletedPomodoros,
@@ -205,6 +215,7 @@ export function useRoomBuilder() {
     claimedRewards: roomState.claimedRewards,
     
     // Actions
+    setRoomName,
     awardPoints,
     calculatePoints,
     purchaseItem,

@@ -43,6 +43,7 @@ const DEFAULT_STREAK_DATA: StreakData = {
 };
 
 const DEFAULT_ROOM_STATE: RoomState = {
+  roomName: 'My Cozy Room',
   focusPoints: WELCOME_BONUS,
   lifetimeFocusPoints: WELCOME_BONUS,
   totalCompletedPomodoros: 0,

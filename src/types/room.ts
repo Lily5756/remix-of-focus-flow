@@ -46,6 +46,7 @@ export interface PlacedItem {
 }
 
 export interface RoomState {
+  roomName: string;
   focusPoints: number;
   lifetimeFocusPoints: number;
   totalCompletedPomodoros: number;

@@ -80,6 +80,7 @@ export function useFocusApp() {
     preferences,
     streakData,
     roomState: {
+      roomName: roomBuilder.roomName,
       focusPoints: roomBuilder.focusPoints,
       lifetimeFocusPoints: roomBuilder.lifetimeFocusPoints,
       totalCompletedPomodoros: roomBuilder.totalCompletedPomodoros,

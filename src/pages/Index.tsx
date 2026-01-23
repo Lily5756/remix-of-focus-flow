@@ -25,6 +25,7 @@ import { AvatarSelector, getAvatarSrc } from '@/components/focus/AvatarSelector'
 import { MilestoneCelebration } from '@/components/focus/MilestoneCelebration';
 import { RoomView } from '@/components/focus/RoomView';
 import { PointsToast } from '@/components/focus/PointsToast';
+import { CalmododoroLogo } from '@/components/focus/CalmododoroLogo';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
@@ -135,9 +136,14 @@ export default function Index() {
       {/* Points earned toast */}
       <PointsToast points={lastPointsEarned} />
 
+      {/* Logo */}
+      <div className="pt-6 pb-2 flex justify-center">
+        <CalmododoroLogo className="h-12 w-auto text-foreground" />
+      </div>
+
       {/* Header with profile, streak and theme toggle */}
-      <header className="pt-6 pb-2 px-4 flex items-center justify-between">
-        <button 
+      <header className="pb-2 px-4 flex items-center justify-between">
+        <button
           type="button"
           onClick={() => {
             console.log('Avatar button clicked');

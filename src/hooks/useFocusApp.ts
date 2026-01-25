@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { useTimer } from './useTimer';
 import { useSound } from './useSound';
+import { useNotification } from './useNotification';
 import { useStreakCelebration, getMilestoneMessage, STREAK_MILESTONES } from './useStreakCelebration';
 import { useRoomBuilder } from './useRoomBuilder';
 import { useCloudSync, CloudData } from './useCloudSync';
@@ -48,6 +49,7 @@ export function useFocusApp() {
   const [lastPointsEarned, setLastPointsEarned] = useState<PointsEarned | null>(null);
   
   const { playChime } = useSound();
+  const { notify, requestPermission } = useNotification();
   const { celebrate } = useStreakCelebration();
   const roomBuilder = useRoomBuilder();
   const { user, isAuthenticated } = useAuth();
@@ -116,11 +118,19 @@ export function useFocusApp() {
   const handleFocusComplete = useCallback(() => {
     playChime();
     setShowReflection(true);
-  }, [playChime]);
+    notify('Focus session complete!', {
+      body: 'Great work! Time for a break.',
+      tag: 'focus-complete',
+    });
+  }, [playChime, notify]);
 
   const handleBreakComplete = useCallback(() => {
     playChime();
-  }, [playChime]);
+    notify('Break is over!', {
+      body: 'Ready to focus again?',
+      tag: 'break-complete',
+    });
+  }, [playChime, notify]);
 
   const timer = useTimer({
     onFocusComplete: handleFocusComplete,
@@ -205,7 +215,10 @@ export function useFocusApp() {
 
   const startSession = useCallback(() => {
     if (!activeTaskId) return;
-    
+
+    // Request notification permission when starting first session
+    requestPermission();
+
     const sessionId = generateId();
     const newSession: FocusSession = {
       id: sessionId,
@@ -215,11 +228,11 @@ export function useFocusApp() {
       completedAt: null,
       reflection: null,
     };
-    
+
     setSessions(prev => [newSession, ...prev]);
     setCurrentSessionId(sessionId);
     timer.startFocus(selectedDuration);
-  }, [activeTaskId, selectedDuration, setSessions, timer]);
+  }, [activeTaskId, selectedDuration, setSessions, timer, requestPermission]);
 
   const submitReflection = useCallback((answer: 'yes' | 'no') => {
     if (!currentSessionId) return;

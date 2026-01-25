@@ -24,7 +24,7 @@ export function DurationSelector({ selectedDuration, onSelect, disabled }: Durat
             disabled && "opacity-50 cursor-not-allowed"
           )}
         >
-          {duration}m
+          {duration < 1 ? '10s' : `${duration}m`}
         </button>
       ))}
     </div>

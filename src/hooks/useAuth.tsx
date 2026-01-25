@@ -2,6 +2,12 @@ import { createContext, useContext, useEffect, useState, useCallback, ReactNode 
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
+// Get the base URL for redirects (handles GitHub Pages subpath)
+const getRedirectUrl = () => {
+  const base = import.meta.env.BASE_URL || '/';
+  return `${window.location.origin}${base}`;
+};
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -54,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: getRedirectUrl(),
           data: {
             display_name: displayName,
           },
@@ -83,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: getRedirectUrl(),
         },
       });
       return { error: error as Error | null };
@@ -95,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const resetPassword = useCallback(async (email: string) => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}`,
+        redirectTo: getRedirectUrl(),
       });
       return { error: error as Error | null };
     } catch (err) {
@@ -118,6 +124,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => {
     setIsRecoveryMode(false);
     await supabase.auth.signOut();
+
+    // Clear all app data from localStorage
+    const keysToRemove = [
+      'focus-tasks',
+      'focus-sessions',
+      'focus-preferences',
+      'focus-streak',
+      'focus-music-enabled',
+      'focus-music-volume',
+      'focus-mood-theme',
+      'room-state',
+      'last-points-date',
+      'calmodoro_greeting_shown',
+    ];
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+
+    // Reload to reset app state
+    window.location.reload();
   }, []);
 
   return (

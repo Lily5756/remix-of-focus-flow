@@ -70,9 +70,10 @@ export function CalendarView() {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full px-4">
+      <div className="w-full max-w-2xl mx-auto flex flex-col flex-1">
       {/* Month header */}
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="flex items-center justify-between py-3">
         <button
           onClick={goToPreviousMonth}
           className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
@@ -172,7 +173,7 @@ export function CalendarView() {
       </div>
 
       {/* Selected date details */}
-      <div className="border-t border-border mt-4 px-4 py-4 min-h-[180px] max-h-[240px] overflow-y-auto">
+      <div className="border-t border-border mt-4 py-4 min-h-[180px] max-h-[240px] overflow-y-auto">
         {selectedDate ? (
           <>
             <h3 className="font-medium mb-3">
@@ -230,6 +231,7 @@ export function CalendarView() {
         ) : (
           <p className="text-sm text-muted-foreground">Select a date to view details</p>
         )}
+      </div>
       </div>
     </div>
   );

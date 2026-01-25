@@ -80,6 +80,7 @@ export function ReportView({ userName }: ReportViewProps) {
 
   return (
     <div className="flex flex-col h-full px-4">
+      <div className="w-full max-w-2xl mx-auto flex flex-col flex-1">
       {/* Header */}
       <div className="py-4">
         <h1 className="text-xl font-semibold">Your Focus Report 📊</h1>
@@ -204,6 +205,7 @@ export function ReportView({ userName }: ReportViewProps) {
           </p>
         </div>
       )}
+      </div>
 
       {/* Share Modal */}
       {showShareModal && (

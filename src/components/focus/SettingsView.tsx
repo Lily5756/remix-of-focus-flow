@@ -85,6 +85,7 @@ export function SettingsView({
 
   return (
     <div className="flex flex-col h-full px-4">
+      <div className="w-full max-w-2xl mx-auto flex flex-col flex-1">
       {/* Header */}
       <div className="py-4">
         <h1 className="text-xl font-semibold">Settings</h1>
@@ -350,6 +351,7 @@ export function SettingsView({
         <p className="text-xs text-muted-foreground">
           Made with 💛 for focused minds
         </p>
+      </div>
       </div>
 
       {/* Auth Modal */}

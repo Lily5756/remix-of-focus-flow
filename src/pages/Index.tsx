@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User } from 'lucide-react';
+import { User, Home, Settings } from 'lucide-react';
 import { useFocusApp } from '@/hooks/useFocusApp';
 import { useFocusMusic } from '@/hooks/useFocusMusic';
 import { useMoodTheme } from '@/hooks/useMoodTheme';
@@ -29,7 +29,9 @@ import { PointsToast } from '@/components/focus/PointsToast';
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
   const [showGreeting, setShowGreeting] = useState(false);
-  const [hasShownGreeting, setHasShownGreeting] = useState(false);
+  const [hasShownGreeting, setHasShownGreeting] = useState(() => {
+    return localStorage.getItem('calmodoro_greeting_shown') === 'true';
+  });
   const [showTaskDetail, setShowTaskDetail] = useState(false);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
   
@@ -90,10 +92,12 @@ export default function Index() {
     }
   }, [isFocusing, isPaused]);
 
-  // Show greeting banner for returning users
+  // Show greeting banner only for first-time users (not returning users)
   useEffect(() => {
     if (userName && !hasShownGreeting) {
-      setShowGreeting(true);
+      // Only show greeting for brand new users (handled in handleWelcomeComplete)
+      // Returning users with saved userName won't see the greeting
+      localStorage.setItem('calmodoro_greeting_shown', 'true');
       setHasShownGreeting(true);
     }
   }, [userName, hasShownGreeting]);
@@ -137,7 +141,7 @@ export default function Index() {
 
       {/* Header with profile, streak and theme toggle */}
       <header className="pt-6 pb-2 px-4 flex items-center justify-between">
-        <button 
+        <button
           type="button"
           onClick={() => {
             console.log('Avatar button clicked');
@@ -157,7 +161,29 @@ export default function Index() {
           )}
         </button>
         <StreakDisplay streakData={streakData} />
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setActiveTab('room')}
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+              activeTab === 'room'
+                ? 'bg-foreground text-background'
+                : 'bg-muted text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <Home className="w-4 h-4" />
+          </button>
+          <ThemeToggle />
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+              activeTab === 'settings'
+                ? 'bg-foreground text-background'
+                : 'bg-muted text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <Settings className="w-4 h-4" />
+          </button>
+        </div>
       </header>
 
       {/* Tab Navigation - positioned higher */}

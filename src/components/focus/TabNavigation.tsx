@@ -12,10 +12,8 @@ export function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   const tabs = [
     { id: 'focus' as Tab, label: 'Focus', icon: Timer },
     { id: 'tasks' as Tab, label: 'Tasks', icon: ListTodo },
-    { id: 'room' as Tab, label: 'Room', icon: Home },
     { id: 'calendar' as Tab, label: 'Calendar', icon: Calendar },
     { id: 'report' as Tab, label: 'Report', icon: BarChart3 },
-    { id: 'settings' as Tab, label: 'Settings', icon: Settings },
   ];
 
   return (

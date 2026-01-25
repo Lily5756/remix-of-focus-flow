@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: '/remix-of-focus-flow/',
+  base: mode === 'production' ? '/remix-of-focus-flow/' : '/',
   server: {
     host: "::",
     port: 8080,

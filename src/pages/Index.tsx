@@ -90,7 +90,7 @@ export default function Index() {
     } else {
       music.stopMusic();
     }
-  }, [isFocusing, isPaused]);
+  }, [isFocusing, isPaused, music.startMusic, music.pauseMusic, music.stopMusic]);
 
   // Show greeting banner only for first-time users (not returning users)
   useEffect(() => {
@@ -272,7 +272,6 @@ export default function Index() {
                 isPlaying={music.isPlaying}
                 isMusicEnabled={music.isMusicEnabled}
                 volume={music.volume}
-                autoplayBlocked={music.autoplayBlocked}
                 onToggleMusic={music.toggleMusic}
                 onSkipTrack={music.skipTrack}
                 onVolumeChange={music.updateVolume}

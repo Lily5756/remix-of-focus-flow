@@ -5,7 +5,6 @@ interface MusicControlsProps {
   isPlaying: boolean;
   isMusicEnabled: boolean;
   volume: number;
-  autoplayBlocked?: boolean;
   onToggleMusic: () => void;
   onSkipTrack: () => void;
   onVolumeChange: (volume: number) => void;
@@ -16,7 +15,6 @@ export function MusicControls({
   isPlaying,
   isMusicEnabled,
   volume,
-  autoplayBlocked,
   onToggleMusic,
   onSkipTrack,
   onVolumeChange,
@@ -53,8 +51,8 @@ export function MusicControls({
         )}
       </button>
 
-      {/* Show "Click to Play" button when autoplay is blocked and not playing */}
-      {isMusicEnabled && autoplayBlocked && !isPlaying && onRetryPlay && (
+      {/* Show "Play Music" button when music is enabled but not playing */}
+      {isMusicEnabled && !isPlaying && onRetryPlay && (
         <button
           onClick={onRetryPlay}
           className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105"
@@ -69,8 +67,8 @@ export function MusicControls({
         </button>
       )}
 
-      {/* Volume slider - show when music is enabled and either playing OR autoplay not blocked */}
-      {isMusicEnabled && (isPlaying || !autoplayBlocked) && (
+      {/* Volume slider - show when music is enabled */}
+      {isMusicEnabled && (
         <>
           <div className="flex items-center gap-2 flex-1">
             <Volume2 className="w-4 h-4 text-muted-foreground" />

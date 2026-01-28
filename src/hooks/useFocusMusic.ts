@@ -2,11 +2,11 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 
 const FOCUS_TRACKS = [
-  '/audio/slow_piano.mp3',
-  '/audio/lofi_chill.mp3',
-  '/audio/full_track.mp3',
-  '/audio/focus_beat.mp3',
-  '/audio/calming_piano.mp3',
+  `${import.meta.env.BASE_URL}audio/slow_piano.mp3`,
+  `${import.meta.env.BASE_URL}audio/lofi_chill.mp3`,
+  `${import.meta.env.BASE_URL}audio/full_track.mp3`,
+  `${import.meta.env.BASE_URL}audio/focus_beat.mp3`,
+  `${import.meta.env.BASE_URL}audio/calming_piano.mp3`,
 ];
 
 export function useFocusMusic() {

@@ -66,7 +66,7 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
       <div className="w-full max-w-sm relative z-10">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img src="/calmodoro.png" alt="Calmodoro" className="w-20 h-20" />
+          <img src={`${import.meta.env.BASE_URL}calmodoro.png`} alt="Calmodoro" className="w-20 h-20" />
         </div>
 
         {/* Welcome header */}

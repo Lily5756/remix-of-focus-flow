@@ -14,14 +14,17 @@ export function useFocusMusic() {
   const [volume, setVolume] = useLocalStorage('focus-music-volume', 0.5);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [pendingPlay, setPendingPlay] = useState(false);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize audio element
   useEffect(() => {
     audioRef.current = new Audio();
     audioRef.current.volume = volume;
-    
+    audioRef.current.loop = false;
+
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -39,11 +42,27 @@ export function useFocusMusic() {
 
   const playTrack = useCallback((index: number) => {
     if (!audioRef.current || !isMusicEnabled) return;
-    
-    audioRef.current.src = FOCUS_TRACKS[index];
-    audioRef.current.play().catch(console.error);
-    setCurrentTrackIndex(index);
-    setIsPlaying(true);
+
+    const trackIndex = index % FOCUS_TRACKS.length;
+    audioRef.current.src = FOCUS_TRACKS[trackIndex];
+
+    const playPromise = audioRef.current.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setCurrentTrackIndex(trackIndex);
+          setIsPlaying(true);
+          setAutoplayBlocked(false);
+          setPendingPlay(false);
+        })
+        .catch((error) => {
+          console.warn('Autoplay blocked:', error.message);
+          setAutoplayBlocked(true);
+          setPendingPlay(true);
+          setIsPlaying(false);
+        });
+    }
   }, [isMusicEnabled]);
 
   const handleTrackEnd = useCallback(() => {
@@ -106,6 +125,7 @@ export function useFocusMusic() {
       if (!newValue && audioRef.current) {
         audioRef.current.pause();
         setIsPlaying(false);
+        setPendingPlay(false);
       }
       return newValue;
     });
@@ -115,12 +135,22 @@ export function useFocusMusic() {
     setVolume(Math.max(0, Math.min(1, newVolume)));
   }, [setVolume]);
 
+  // Retry playing after user interaction (for autoplay blocked case)
+  const retryPlay = useCallback(() => {
+    if (pendingPlay && audioRef.current && isMusicEnabled) {
+      const randomIndex = Math.floor(Math.random() * FOCUS_TRACKS.length);
+      playTrack(randomIndex);
+    }
+  }, [pendingPlay, isMusicEnabled, playTrack]);
+
   return {
     isPlaying,
     isMusicEnabled,
     volume,
     currentTrackIndex,
     trackCount: FOCUS_TRACKS.length,
+    autoplayBlocked,
+    pendingPlay,
     startMusic,
     stopMusic,
     pauseMusic,
@@ -128,5 +158,6 @@ export function useFocusMusic() {
     skipTrack,
     toggleMusic,
     updateVolume,
+    retryPlay,
   };
 }

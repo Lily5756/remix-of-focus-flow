@@ -272,9 +272,11 @@ export default function Index() {
                 isPlaying={music.isPlaying}
                 isMusicEnabled={music.isMusicEnabled}
                 volume={music.volume}
+                autoplayBlocked={music.autoplayBlocked}
                 onToggleMusic={music.toggleMusic}
                 onSkipTrack={music.skipTrack}
                 onVolumeChange={music.updateVolume}
+                onRetryPlay={music.retryPlay}
               />
             </div>
           )}

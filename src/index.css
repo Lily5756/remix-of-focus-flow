@@ -323,76 +323,143 @@
     to { opacity: 1; }
   }
 
-  /* Cozy Mode: Floating dust motes */
-  .animate-float-cozy {
-    animation: float-cozy linear infinite;
+  /* Cozy Mode: Gentle floating orbs */
+  .animate-float-gentle {
+    animation: float-gentle ease-in-out infinite;
   }
 
-  @keyframes float-cozy {
+  @keyframes float-gentle {
     0%, 100% {
       transform: translateY(0) translateX(0) scale(1);
-      opacity: 0.2;
-    }
-    25% {
-      transform: translateY(-30px) translateX(15px) scale(1.1);
       opacity: 0.4;
     }
-    50% {
-      transform: translateY(-50px) translateX(-10px) scale(0.9);
-      opacity: 0.3;
+    33% {
+      transform: translateY(-20px) translateX(12px) scale(1.05);
+      opacity: 0.6;
     }
-    75% {
-      transform: translateY(-20px) translateX(20px) scale(1.05);
-      opacity: 0.35;
-    }
-  }
-
-  /* Locked-In Mode: Pulsing rings */
-  .animate-pulse-ring {
-    animation: pulse-ring 4s ease-out infinite;
-  }
-
-  .animate-pulse-ring-delayed {
-    animation: pulse-ring 4s ease-out infinite 2s;
-  }
-
-  @keyframes pulse-ring {
-    0% {
-      transform: scale(0.8);
-      opacity: 0;
-    }
-    20% {
-      opacity: 0.15;
-    }
-    100% {
-      transform: scale(1.4);
-      opacity: 0;
-    }
-  }
-
-  /* Fresh Mode: Rising bubbles */
-  .animate-float-fresh {
-    animation: float-fresh ease-in-out infinite;
-  }
-
-  @keyframes float-fresh {
-    0% {
-      transform: translateY(0) translateX(0) scale(0.8);
-      opacity: 0;
-    }
-    10% {
+    66% {
+      transform: translateY(-35px) translateX(-8px) scale(0.95);
       opacity: 0.5;
     }
-    50% {
-      transform: translateY(-50vh) translateX(20px) scale(1);
-      opacity: 0.4;
+  }
+
+  .animate-aurora-shift {
+    animation: aurora-shift 30s ease-in-out infinite;
+  }
+
+  @keyframes aurora-shift {
+    0%, 100% {
+      opacity: 0.6;
+      transform: scale(1) translateX(0);
     }
-    90% {
+    50% {
+      opacity: 0.8;
+      transform: scale(1.1) translateX(5%);
+    }
+  }
+
+  .animate-twinkle {
+    animation: twinkle ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  /* Locked-In Mode: Breathing rings */
+  .animate-breathe-ring {
+    animation: breathe-ring 6s ease-in-out infinite;
+  }
+
+  .animate-breathe-ring-delayed {
+    animation: breathe-ring 6s ease-in-out infinite 3s;
+  }
+
+  @keyframes breathe-ring {
+    0%, 100% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    25% {
+      opacity: 0.2;
+    }
+    50% {
+      transform: scale(1.05);
       opacity: 0.15;
     }
-    100% {
-      transform: translateY(-100vh) translateX(-10px) scale(0.9);
+    75% {
+      opacity: 0.1;
+    }
+  }
+
+  /* Fresh Mode: Rising glass bubbles */
+  .animate-rise-float {
+    animation: rise-float ease-in-out infinite;
+  }
+
+  @keyframes rise-float {
+    0% {
+      transform: translateY(0) translateX(0) scale(0.7);
       opacity: 0;
+    }
+    15% {
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateY(-50vh) translateX(15px) scale(1);
+      opacity: 0.5;
+    }
+    85% {
+      opacity: 0.3;
+    }
+    100% {
+      transform: translateY(-105vh) translateX(-10px) scale(0.85);
+      opacity: 0;
+    }
+  }
+
+  .animate-gradient-flow {
+    animation: gradient-flow 25s ease-in-out infinite;
+  }
+
+  @keyframes gradient-flow {
+    0%, 100% {
+      opacity: 0.7;
+      transform: translateX(0) translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(-3%) translateY(-2%);
+    }
+  }
+
+  .animate-drift {
+    animation: drift ease-in-out infinite;
+  }
+
+  @keyframes drift {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+      opacity: 0.3;
+    }
+    25% {
+      transform: translateY(-15px) translateX(10px);
+      opacity: 0.7;
+    }
+    50% {
+      transform: translateY(-25px) translateX(-5px);
+      opacity: 0.5;
+    }
+    75% {
+      transform: translateY(-10px) translateX(15px);
+      opacity: 0.6;
     }
   }
 

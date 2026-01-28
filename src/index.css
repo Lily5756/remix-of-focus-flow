@@ -10,42 +10,42 @@
 
 @layer base {
   :root {
-    /* Default light theme tokens */
-    --background: 0 0% 98%;
-    --foreground: 0 0% 9%;
+    /* Default light theme tokens - Clean minimal design */
+    --background: 0 0% 96%;
+    --foreground: 0 0% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    --card-foreground: 0 0% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover-foreground: 0 0% 12%;
 
-    --primary: 0 0% 9%;
+    --primary: 0 0% 12%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 0 0% 94%;
+    --secondary-foreground: 0 0% 12%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 50%;
 
-    --accent: 0 0% 92%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 260 60% 95%;
+    --accent-foreground: 260 30% 30%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 9%;
+    --border: 0 0% 88%;
+    --input: 0 0% 92%;
+    --ring: 260 50% 60%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
     /* Mood gradient tokens */
-    --gradient-start: 0 0% 98%;
-    --gradient-end: 0 0% 95%;
-    --glow-color: 0 0% 90%;
-    --timer-accent: 0 0% 20%;
+    --gradient-start: 0 0% 96%;
+    --gradient-end: 0 0% 94%;
+    --glow-color: 260 50% 90%;
+    --timer-accent: 260 50% 70%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 26%;
@@ -58,38 +58,38 @@
   }
 
   .dark {
-    --background: 0 0% 7%;
+    --background: 0 0% 8%;
     --foreground: 0 0% 95%;
 
-    --card: 0 0% 10%;
+    --card: 0 0% 12%;
     --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 10%;
+    --popover: 0 0% 12%;
     --popover-foreground: 0 0% 95%;
 
     --primary: 0 0% 95%;
     --primary-foreground: 0 0% 9%;
 
-    --secondary: 0 0% 15%;
+    --secondary: 0 0% 16%;
     --secondary-foreground: 0 0% 95%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 55%;
 
-    --accent: 0 0% 18%;
-    --accent-foreground: 0 0% 95%;
+    --accent: 260 30% 20%;
+    --accent-foreground: 260 60% 85%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 95%;
 
-    --border: 0 0% 18%;
+    --border: 0 0% 20%;
     --input: 0 0% 18%;
-    --ring: 0 0% 85%;
+    --ring: 260 50% 55%;
 
-    --gradient-start: 0 0% 7%;
+    --gradient-start: 0 0% 8%;
     --gradient-end: 0 0% 10%;
-    --glow-color: 0 0% 15%;
-    --timer-accent: 0 0% 80%;
+    --glow-color: 260 40% 20%;
+    --timer-accent: 260 50% 65%;
 
     --sidebar-background: 0 0% 10%;
     --sidebar-foreground: 0 0% 96%;

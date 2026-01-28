@@ -140,34 +140,34 @@ export default function Index() {
       <PointsToast points={lastPointsEarned} />
 
       {/* Header with profile, streak and theme toggle */}
-      <header className="pt-6 pb-2 px-4 flex items-center justify-between">
+      <header className="pt-6 pb-4 px-4 flex items-center justify-between">
         <button
           type="button"
           onClick={() => {
             console.log('Avatar button clicked');
             setShowAvatarSelector(true);
           }}
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
-          <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center overflow-hidden border-2 border-transparent hover:border-foreground/20 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-card shadow-sm flex items-center justify-center overflow-hidden border border-border">
             {avatarSrc ? (
               <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
-              <User className="w-4 h-4 text-muted-foreground" />
+              <User className="w-5 h-5 text-muted-foreground" />
             )}
           </div>
           {userName && (
-            <span className="text-sm font-medium text-foreground">{userName}</span>
+            <span className="text-sm font-semibold text-foreground">{userName}</span>
           )}
         </button>
         <StreakDisplay streakData={streakData} />
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('room')}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-sm ${
               activeTab === 'room'
                 ? 'bg-foreground text-background'
-                : 'bg-muted text-muted-foreground hover:text-foreground'
+                : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}
           >
             <Home className="w-4 h-4" />
@@ -175,10 +175,10 @@ export default function Index() {
           <ThemeToggle />
           <button
             onClick={() => setActiveTab('settings')}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-sm ${
               activeTab === 'settings'
                 ? 'bg-foreground text-background'
-                : 'bg-muted text-muted-foreground hover:text-foreground'
+                : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}
           >
             <Settings className="w-4 h-4" />
@@ -186,14 +186,17 @@ export default function Index() {
         </div>
       </header>
 
-      {/* Tab Navigation - positioned higher */}
-      <div className="flex justify-center py-3 px-4">
-        <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-      </div>
+      {/* Bottom Tab Navigation */}
+      <TabNavigation
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        timerDisplay={`${Math.floor(timer.timeRemaining / 60).toString().padStart(2, '0')}:${(timer.timeRemaining % 60).toString().padStart(2, '0')}`}
+        isTimerActive={isTimerActive}
+      />
 
       {/* Content */}
       {activeTab === 'focus' && (
-        <main className="flex-1 flex flex-col items-center justify-center px-4 pb-8 pt-4">
+        <main className="flex-1 flex flex-col items-center justify-center px-4 pb-24 pt-4">
           <div className="mb-6">
             <TimerDisplay
               timeRemaining={timer.timeRemaining}
@@ -225,10 +228,10 @@ export default function Index() {
           {activeTask && (
             <button
               onClick={() => setShowTaskDetail(true)}
-              className="mb-6 px-4 py-2 rounded-xl bg-muted/50 text-muted-foreground text-sm flex items-center gap-2 hover:bg-muted transition-colors mood-transition"
+              className="mb-6 px-5 py-2.5 rounded-xl bg-card border border-border text-muted-foreground text-sm flex items-center gap-2 hover:bg-muted hover:text-foreground transition-all shadow-sm"
             >
-              <span>📝</span>
-              <span>
+              <span className="text-base">📝</span>
+              <span className="font-medium">
                 {activeTask.notes ? 'View Notes' : 'Add Notes'}
               </span>
             </button>
@@ -261,7 +264,7 @@ export default function Index() {
       )}
 
       {activeTab === 'tasks' && (
-        <main className="flex-1 flex flex-col pb-8">
+        <main className="flex-1 flex flex-col pb-24">
           <TasksView
             tasks={allTasks}
             onAddTask={addTask}
@@ -275,13 +278,13 @@ export default function Index() {
       )}
 
       {activeTab === 'calendar' && (
-        <main className="flex-1 flex flex-col px-2 pb-8">
+        <main className="flex-1 flex flex-col px-2 pb-24">
           <CalendarView />
         </main>
       )}
 
       {activeTab === 'room' && (
-        <main className="flex-1 flex flex-col pb-8">
+        <main className="flex-1 flex flex-col pb-24">
           <RoomView
             roomName={roomBuilder.roomName}
             onRoomNameChange={roomBuilder.setRoomName}
@@ -305,13 +308,13 @@ export default function Index() {
       )}
 
       {activeTab === 'report' && (
-        <main className="flex-1 flex flex-col pb-8">
+        <main className="flex-1 flex flex-col pb-24">
           <ReportView userName={userName} />
         </main>
       )}
 
       {activeTab === 'settings' && (
-        <main className="flex-1 flex flex-col pb-8">
+        <main className="flex-1 flex flex-col pb-24">
           <SettingsView 
             userName={userName} 
             onUpdateName={setUserName}

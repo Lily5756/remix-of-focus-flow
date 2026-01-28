@@ -12,13 +12,13 @@ interface TaskInputProps {
   disabled?: boolean;
 }
 
-export function TaskInput({ 
-  tasks, 
-  activeTask, 
-  onAddTask, 
-  onSelectTask, 
+export function TaskInput({
+  tasks,
+  activeTask,
+  onAddTask,
+  onSelectTask,
   onCompleteTask,
-  disabled 
+  disabled
 }: TaskInputProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [newTaskText, setNewTaskText] = useState('');
@@ -46,20 +46,20 @@ export function TaskInput({
         onClick={() => !disabled && setIsExpanded(!isExpanded)}
         disabled={disabled}
         className={cn(
-          "w-full px-4 py-3 rounded-2xl text-left transition-all",
-          "border border-border bg-card",
+          "w-full px-5 py-4 rounded-2xl text-left transition-all",
+          "bg-card border border-border shadow-sm",
           "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          disabled ? "opacity-60 cursor-not-allowed" : "hover:bg-accent"
+          disabled ? "opacity-60 cursor-not-allowed" : "hover:shadow-md hover:border-muted-foreground/20"
         )}
       >
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
             {activeTask ? (
               <div className="flex items-center gap-2">
-                <span className="truncate font-medium">{activeTask.text}</span>
+                <span className="truncate font-medium text-foreground">{activeTask.text}</span>
                 {activeTask.completedPomodoros > 0 && (
-                  <span className="text-xs text-muted-foreground shrink-0">
-                    ×{activeTask.completedPomodoros}
+                  <span className="text-xs text-muted-foreground shrink-0 bg-muted px-2 py-0.5 rounded-full">
+                    x{activeTask.completedPomodoros}
                   </span>
                 )}
               </div>
@@ -68,7 +68,7 @@ export function TaskInput({
             )}
           </div>
           <ChevronDown className={cn(
-            "w-4 h-4 text-muted-foreground transition-transform shrink-0 ml-2",
+            "w-5 h-5 text-muted-foreground transition-transform shrink-0 ml-2",
             isExpanded && "rotate-180"
           )} />
         </div>
@@ -76,23 +76,23 @@ export function TaskInput({
 
       {/* Expanded task list */}
       {isExpanded && (
-        <div className="mt-2 rounded-2xl border border-border bg-card overflow-hidden shadow-lg">
+        <div className="mt-3 rounded-2xl border border-border bg-card overflow-hidden shadow-lg">
           {/* Add new task */}
           {isAdding ? (
-            <form onSubmit={handleSubmit} className="p-3 border-b border-border">
+            <form onSubmit={handleSubmit} className="p-4 border-b border-border">
               <input
                 type="text"
                 value={newTaskText}
                 onChange={(e) => setNewTaskText(e.target.value)}
                 placeholder="What will you focus on?"
                 autoFocus
-                className="w-full px-3 py-2 rounded-lg bg-muted border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full px-4 py-3 rounded-xl bg-muted border-0 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-3">
                 <button
                   type="submit"
                   disabled={!newTaskText.trim()}
-                  className="flex-1 px-3 py-2 rounded-lg bg-foreground text-background font-medium disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-foreground text-background font-medium disabled:opacity-50 transition-opacity"
                 >
                   Add
                 </button>
@@ -102,7 +102,7 @@ export function TaskInput({
                     setIsAdding(false);
                     setNewTaskText('');
                   }}
-                  className="px-3 py-2 rounded-lg bg-muted text-muted-foreground"
+                  className="px-4 py-2.5 rounded-xl bg-muted text-muted-foreground font-medium hover:bg-accent transition-colors"
                 >
                   Cancel
                 </button>
@@ -111,17 +111,19 @@ export function TaskInput({
           ) : (
             <button
               onClick={() => setIsAdding(true)}
-              className="w-full px-4 py-3 flex items-center gap-2 text-muted-foreground hover:bg-accent transition-colors border-b border-border"
+              className="w-full px-5 py-4 flex items-center gap-3 text-muted-foreground hover:bg-muted/50 transition-colors border-b border-border"
             >
-              <Plus className="w-4 h-4" />
-              <span>Add new task</span>
+              <div className="w-6 h-6 rounded-full border-2 border-dashed border-muted-foreground/50 flex items-center justify-center">
+                <Plus className="w-3.5 h-3.5" />
+              </div>
+              <span className="font-medium">Add new task</span>
             </button>
           )}
 
           {/* Task list */}
           <div className="max-h-64 overflow-y-auto">
             {tasks.length === 0 && !isAdding ? (
-              <div className="px-4 py-8 text-center text-muted-foreground text-sm">
+              <div className="px-5 py-10 text-center text-muted-foreground text-sm">
                 No tasks yet. Add one to get started!
               </div>
             ) : (
@@ -129,25 +131,30 @@ export function TaskInput({
                 <div
                   key={task.id}
                   className={cn(
-                    "flex items-center gap-2 px-4 py-3 border-b border-border last:border-b-0",
-                    activeTask?.id === task.id && "bg-muted"
+                    "flex items-center gap-3 px-5 py-4 border-b border-border last:border-b-0 transition-colors",
+                    activeTask?.id === task.id && "bg-accent/50"
                   )}
                 >
+                  {/* Circular checkbox */}
                   <button
                     onClick={() => onCompleteTask(task.id)}
-                    className="w-5 h-5 rounded-full border-2 border-muted-foreground hover:border-foreground hover:bg-foreground hover:text-background flex items-center justify-center transition-colors shrink-0"
+                    className="w-6 h-6 rounded-full border-2 border-muted-foreground/40 hover:border-foreground hover:bg-foreground hover:text-background flex items-center justify-center transition-all shrink-0 group"
                   >
-                    <Check className="w-3 h-3 opacity-0 hover:opacity-100" />
+                    <Check className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </button>
+
+                  {/* Task text */}
                   <button
                     onClick={() => handleSelectTask(task.id)}
-                    className="flex-1 text-left truncate hover:text-foreground transition-colors"
+                    className="flex-1 text-left truncate hover:text-foreground transition-colors font-medium"
                   >
                     {task.text}
                   </button>
+
+                  {/* Pomodoro count */}
                   {task.completedPomodoros > 0 && (
-                    <span className="text-xs text-muted-foreground shrink-0">
-                      ×{task.completedPomodoros}
+                    <span className="text-xs text-muted-foreground shrink-0 bg-muted px-2 py-0.5 rounded-full">
+                      x{task.completedPomodoros}
                     </span>
                   )}
                 </div>

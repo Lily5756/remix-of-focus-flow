@@ -30,20 +30,20 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = name.trim();
-    
+
     if (!trimmedName) {
-      setError("Tell me your name first 😄");
+      setError("Tell me your name first");
       return;
     }
-    
+
     if (trimmedName.length > 15) {
-      setError("That's a bit long! Max 15 characters 😅");
+      setError("That's a bit long! Max 15 characters");
       return;
     }
 
     setIsSubmitting(true);
     setError('');
-    
+
     // Small delay for animation feel
     setTimeout(() => {
       onComplete(trimmedName);
@@ -62,16 +62,18 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
     <div className="min-h-screen flex flex-col items-center justify-center px-6 animate-in fade-in duration-500 mood-transition relative">
       {/* Ambient effects */}
       <AmbientEffects mood={activeMood} />
-      
+
       <div className="w-full max-w-sm relative z-10">
         {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <img src={`${import.meta.env.BASE_URL}calmodoro.png`} alt="Calmodoro" className="w-20 h-20" />
+        <div className="flex justify-center mb-8">
+          <div className="w-24 h-24 rounded-3xl bg-card shadow-lg flex items-center justify-center border border-border overflow-hidden">
+            <img src={`${import.meta.env.BASE_URL}calmodoro.png`} alt="Calmodoro" className="w-20 h-20" />
+          </div>
         </div>
 
         {/* Welcome header */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold mb-3">Welcome 👋</h1>
+          <h1 className="text-4xl font-bold tracking-tight mb-3">Welcome</h1>
           <p className="text-lg text-muted-foreground">What should I call you?</p>
         </div>
 
@@ -87,14 +89,14 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
               autoComplete="off"
               maxLength={15}
               className={cn(
-                "w-full px-5 py-4 text-lg rounded-2xl bg-card border-2 transition-colors mood-transition",
-                "placeholder:text-muted-foreground focus:outline-none",
-                error 
-                  ? "border-destructive focus:border-destructive" 
-                  : "border-transparent focus:border-foreground"
+                "w-full px-5 py-4 text-lg rounded-2xl bg-card border-2 transition-all shadow-sm mood-transition",
+                "placeholder:text-muted-foreground focus:outline-none focus:shadow-md",
+                error
+                  ? "border-destructive focus:border-destructive"
+                  : "border-border focus:border-foreground"
               )}
             />
-            
+
             {/* Error message */}
             {error && (
               <p className="mt-2 text-sm text-destructive animate-in fade-in slide-in-from-top-1 duration-200">
@@ -113,24 +115,24 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
             type="submit"
             disabled={isSubmitting}
             className={cn(
-              "w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all mood-transition",
+              "w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all mood-transition shadow-lg",
               "bg-foreground text-background",
               "hover:opacity-90 active:scale-[0.98]",
               "disabled:opacity-70 disabled:cursor-not-allowed",
               isSubmitting && "animate-pulse"
             )}
           >
-            {isSubmitting ? "Let's go! 🚀" : "Let's lock in 🔒"}
+            {isSubmitting ? "Let's go!" : "Let's lock in"}
           </button>
         </form>
 
         {/* Divider */}
-        <div className="relative my-6">
+        <div className="relative my-8">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">or</span>
+            <span className="bg-background px-3 text-muted-foreground font-medium">or</span>
           </div>
         </div>
 
@@ -139,15 +141,15 @@ export function WelcomeScreen({ onComplete }: WelcomeScreenProps) {
           type="button"
           onClick={() => setShowAuthModal(true)}
           className={cn(
-            "w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all",
-            "bg-muted hover:bg-muted/80 border border-border",
+            "w-full py-4 px-6 rounded-2xl font-semibold text-lg transition-all shadow-sm",
+            "bg-card hover:bg-muted border border-border",
           )}
         >
           Sign in to sync progress
         </button>
 
         {/* Helper text */}
-        <p className="text-center text-xs text-muted-foreground mt-6">
+        <p className="text-center text-xs text-muted-foreground mt-8">
           You can change this later in Settings
         </p>
       </div>

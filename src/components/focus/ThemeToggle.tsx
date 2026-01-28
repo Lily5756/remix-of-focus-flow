@@ -3,7 +3,7 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch
@@ -13,7 +13,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="w-9 h-9 rounded-full flex items-center justify-center bg-muted text-muted-foreground">
+      <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-card border border-border text-muted-foreground shadow-sm">
         <Sun className="w-4 h-4" />
       </button>
     );
@@ -24,7 +24,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="w-9 h-9 rounded-full flex items-center justify-center bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="w-10 h-10 rounded-xl flex items-center justify-center bg-card border border-border text-muted-foreground hover:text-foreground transition-all shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDark ? (

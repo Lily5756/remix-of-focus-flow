@@ -33,10 +33,10 @@ export function TimerControls({
           onClick={onStart}
           disabled={!hasActiveTask}
           className={cn(
-            "w-16 h-16 rounded-full flex items-center justify-center transition-all",
+            "w-16 h-16 rounded-2xl flex items-center justify-center transition-all",
             "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             hasActiveTask
-              ? "bg-foreground text-background hover:scale-105 active:scale-95"
+              ? "bg-foreground text-background hover:opacity-90 active:scale-95 shadow-lg"
               : "bg-muted text-muted-foreground cursor-not-allowed"
           )}
         >
@@ -48,15 +48,15 @@ export function TimerControls({
         <>
           <button
             onClick={onStop}
-            className="w-12 h-12 rounded-full bg-muted text-muted-foreground flex items-center justify-center hover:bg-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center hover:opacity-90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
           >
             <Square className="w-5 h-5" fill="currentColor" />
           </button>
           <button
             onClick={onPause}
-            className="w-16 h-16 rounded-full bg-foreground text-background flex items-center justify-center hover:scale-105 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center hover:opacity-90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
           >
-            <Pause className="w-7 h-7" fill="currentColor" />
+            <Pause className="w-5 h-5" fill="currentColor" />
           </button>
         </>
       )}
@@ -65,15 +65,15 @@ export function TimerControls({
         <>
           <button
             onClick={onStop}
-            className="w-12 h-12 rounded-full bg-muted text-muted-foreground flex items-center justify-center hover:bg-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center hover:opacity-90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
           >
             <Square className="w-5 h-5" fill="currentColor" />
           </button>
           <button
             onClick={onResume}
-            className="w-16 h-16 rounded-full bg-foreground text-background flex items-center justify-center hover:scale-105 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center hover:opacity-90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
           >
-            <Play className="w-7 h-7 ml-1" fill="currentColor" />
+            <Play className="w-5 h-5 ml-0.5" fill="currentColor" />
           </button>
         </>
       )}
@@ -81,7 +81,7 @@ export function TimerControls({
       {isBreak && (
         <button
           onClick={onSkipBreak}
-          className="px-6 py-3 rounded-full bg-muted text-muted-foreground flex items-center gap-2 hover:bg-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="px-6 py-3 rounded-2xl bg-muted text-muted-foreground flex items-center gap-2 hover:bg-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-sm"
         >
           <SkipForward className="w-4 h-4" />
           <span className="text-sm font-medium">Skip break</span>

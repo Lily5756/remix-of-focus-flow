@@ -135,13 +135,16 @@ export function useFocusMusic() {
     setVolume(Math.max(0, Math.min(1, newVolume)));
   }, [setVolume]);
 
-  // Retry playing after user interaction (for autoplay blocked case)
+  // Manual play triggered by user interaction (works for autoplay blocked or any case)
   const retryPlay = useCallback(() => {
-    if (pendingPlay && audioRef.current && isMusicEnabled) {
+    if (audioRef.current && isMusicEnabled) {
+      // Reset blocked state since this is a user-triggered action
+      setAutoplayBlocked(false);
+      setPendingPlay(false);
       const randomIndex = Math.floor(Math.random() * FOCUS_TRACKS.length);
       playTrack(randomIndex);
     }
-  }, [pendingPlay, isMusicEnabled, playTrack]);
+  }, [isMusicEnabled, playTrack]);
 
   return {
     isPlaying,

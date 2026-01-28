@@ -22,111 +22,166 @@ function generateParticles(count: number): Particle[] {
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
-    size: Math.random() * 8 + 4, // Bigger particles (4-12px)
-    duration: Math.random() * 20 + 15,
-    delay: Math.random() * 8,
-    opacity: Math.random() * 0.4 + 0.2, // Higher opacity (0.2-0.6)
+    size: Math.random() * 6 + 3,
+    duration: Math.random() * 25 + 20,
+    delay: Math.random() * 10,
+    opacity: Math.random() * 0.5 + 0.2,
   }));
 }
 
-// Cozy Mode: Floating dust motes in warm sunlight
+// Cozy Mode: Soft glowing orbs with warm aurora effect
 function CozyParticles() {
-  const particles = useMemo(() => generateParticles(20), []); // More particles
+  const orbs = useMemo(() => generateParticles(12), []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((p) => (
+      {/* Soft aurora gradient background */}
+      <div
+        className="absolute inset-0 animate-aurora-shift"
+        style={{
+          background: `
+            radial-gradient(ellipse 80% 50% at 20% 40%, hsl(35 70% 60% / 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 40% at 80% 60%, hsl(25 80% 55% / 0.06) 0%, transparent 50%)
+          `,
+        }}
+      />
+      {/* Floating soft orbs */}
+      {orbs.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full animate-float-cozy"
+          className="absolute rounded-full animate-float-gentle blur-sm"
           style={{
             left: `${p.x}%`,
             top: `${p.y}%`,
-            width: `${p.size}px`,
-            height: `${p.size}px`,
-            background: `radial-gradient(circle, hsl(35 70% 65% / ${p.opacity}) 0%, hsl(30 60% 55% / ${p.opacity * 0.5}) 100%)`,
-            boxShadow: `0 0 ${p.size * 2}px hsl(35 60% 60% / ${p.opacity * 0.6})`,
+            width: `${p.size * 4}px`,
+            height: `${p.size * 4}px`,
+            background: `radial-gradient(circle at 40% 40%, hsl(40 70% 70% / ${p.opacity * 0.6}), hsl(30 60% 50% / ${p.opacity * 0.2}) 60%, transparent 100%)`,
             animationDuration: `${p.duration}s`,
             animationDelay: `${p.delay}s`,
           }}
         />
       ))}
+      {/* Tiny sparkle accents */}
+      {orbs.slice(0, 6).map((p) => (
+        <div
+          key={`spark-${p.id}`}
+          className="absolute rounded-full animate-twinkle"
+          style={{
+            left: `${(p.x + 15) % 100}%`,
+            top: `${(p.y + 20) % 100}%`,
+            width: '3px',
+            height: '3px',
+            background: 'hsl(45 90% 80%)',
+            boxShadow: '0 0 8px 2px hsl(45 80% 70% / 0.5)',
+            animationDuration: `${p.duration * 0.4}s`,
+            animationDelay: `${p.delay + 3}s`,
+          }}
+        />
+      ))}
     </div>
   );
 }
 
-// Locked-In Mode: Pulsing concentric rings
+// Locked-In Mode: Minimal geometric focus rings with subtle glow
 function LockedInPulse({ isActive }: { isActive?: boolean }) {
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-      {/* Outer pulse ring */}
+      {/* Outer breathing ring */}
       <div
         className={cn(
-          "absolute w-80 h-80 sm:w-96 sm:h-96 rounded-full border opacity-0",
-          isActive && "animate-pulse-ring"
+          "absolute w-[340px] h-[340px] sm:w-[420px] sm:h-[420px] rounded-full opacity-0",
+          isActive && "animate-breathe-ring"
         )}
         style={{
-          borderColor: 'hsl(0 0% 40% / 0.15)',
-          borderWidth: '1px',
+          border: '1px solid hsl(0 0% 50% / 0.12)',
+          boxShadow: '0 0 40px hsl(0 0% 50% / 0.05)',
         }}
       />
-      {/* Middle pulse ring */}
+      {/* Inner breathing ring */}
       <div
         className={cn(
-          "absolute w-72 h-72 sm:w-80 sm:h-80 rounded-full border opacity-0",
-          isActive && "animate-pulse-ring-delayed"
+          "absolute w-[280px] h-[280px] sm:w-[340px] sm:h-[340px] rounded-full opacity-0",
+          isActive && "animate-breathe-ring-delayed"
         )}
         style={{
-          borderColor: 'hsl(0 0% 50% / 0.1)',
-          borderWidth: '1px',
+          border: '1px solid hsl(0 0% 55% / 0.1)',
         }}
       />
-      {/* Subtle corner vignette for focus */}
-      <div 
+      {/* Center subtle glow */}
+      <div
+        className={cn(
+          "absolute w-48 h-48 sm:w-56 sm:h-56 rounded-full transition-opacity duration-1000",
+          isActive ? "opacity-100" : "opacity-0"
+        )}
+        style={{
+          background: 'radial-gradient(circle, hsl(0 0% 60% / 0.03) 0%, transparent 70%)',
+        }}
+      />
+      {/* Subtle vignette */}
+      <div
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, transparent 50%, hsl(0 0% 0% / 0.2) 100%)',
+          background: 'radial-gradient(ellipse at center, transparent 40%, hsl(0 0% 0% / 0.15) 100%)',
         }}
       />
     </div>
   );
 }
 
-// Fresh Start Mode: Gentle floating bubbles/orbs - MORE VISIBLE on light backgrounds
+// Fresh Mode: Glass morphism bubbles with iridescent effect
 function FreshBubbles() {
-  const bubbles = useMemo(() => generateParticles(18), []);
+  const bubbles = useMemo(() => generateParticles(10), []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Soft gradient waves */}
+      <div
+        className="absolute inset-0 animate-gradient-flow"
+        style={{
+          background: `
+            radial-gradient(ellipse 100% 60% at 10% 90%, hsl(175 50% 60% / 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse 80% 50% at 90% 20%, hsl(200 60% 65% / 0.05) 0%, transparent 50%)
+          `,
+        }}
+      />
+      {/* Glass bubbles rising */}
       {bubbles.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full animate-float-fresh"
+          className="absolute rounded-full animate-rise-float backdrop-blur-[1px]"
           style={{
             left: `${p.x}%`,
-            bottom: `-${p.size * 2}px`,
-            width: `${p.size * 3}px`,
-            height: `${p.size * 3}px`,
-            // Use darker, more saturated colors for visibility on light backgrounds
-            background: `radial-gradient(circle at 30% 30%, hsl(175 60% 55% / ${p.opacity + 0.25}), hsl(190 50% 45% / ${p.opacity + 0.1}))`,
-            boxShadow: `0 0 ${p.size * 4}px hsl(180 50% 50% / ${p.opacity * 0.5})`,
-            animationDuration: `${p.duration + 5}s`,
+            bottom: `-${p.size * 5}px`,
+            width: `${p.size * 5}px`,
+            height: `${p.size * 5}px`,
+            background: `
+              radial-gradient(circle at 30% 30%, hsl(180 60% 90% / ${p.opacity * 0.4}) 0%, transparent 50%),
+              radial-gradient(circle at 70% 70%, hsl(200 50% 80% / ${p.opacity * 0.2}) 0%, transparent 50%),
+              linear-gradient(135deg, hsl(175 50% 70% / ${p.opacity * 0.15}) 0%, hsl(195 60% 60% / ${p.opacity * 0.1}) 100%)
+            `,
+            border: `1px solid hsl(180 40% 70% / ${p.opacity * 0.3})`,
+            boxShadow: `
+              inset 0 0 ${p.size * 2}px hsl(180 50% 90% / 0.2),
+              0 0 ${p.size * 3}px hsl(185 50% 60% / ${p.opacity * 0.2})
+            `,
+            animationDuration: `${p.duration}s`,
             animationDelay: `${p.delay}s`,
           }}
         />
       ))}
-      {/* Subtle floating sparkles */}
-      {bubbles.slice(0, 8).map((p) => (
+      {/* Floating light specks */}
+      {bubbles.slice(0, 5).map((p) => (
         <div
-          key={`sparkle-${p.id}`}
-          className="absolute animate-float-cozy"
+          key={`speck-${p.id}`}
+          className="absolute rounded-full animate-drift"
           style={{
-            left: `${(p.x + 30) % 100}%`,
+            left: `${(p.x + 40) % 100}%`,
             top: `${p.y}%`,
-            width: `${p.size * 0.8}px`,
-            height: `${p.size * 0.8}px`,
-            background: `radial-gradient(circle, hsl(50 80% 70% / ${p.opacity + 0.2}) 0%, transparent 70%)`,
-            animationDuration: `${p.duration * 0.8}s`,
+            width: '4px',
+            height: '4px',
+            background: 'radial-gradient(circle, hsl(180 70% 85%) 0%, transparent 100%)',
+            boxShadow: '0 0 10px 3px hsl(180 60% 70% / 0.3)',
+            animationDuration: `${p.duration * 0.6}s`,
             animationDelay: `${p.delay + 2}s`,
           }}
         />
@@ -139,7 +194,6 @@ export function AmbientEffects({ mood, isActive }: AmbientEffectsProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Delay mount for smooth entrance
     const timer = setTimeout(() => setMounted(true), 100);
     return () => clearTimeout(timer);
   }, []);
@@ -148,7 +202,7 @@ export function AmbientEffects({ mood, isActive }: AmbientEffectsProps) {
 
   return (
     <div className={cn(
-      "fixed inset-0 z-0 pointer-events-none transition-opacity duration-500",
+      "fixed inset-0 z-0 pointer-events-none transition-opacity duration-700",
       mounted ? "opacity-100" : "opacity-0"
     )}>
       {mood === 'cozy' && <CozyParticles />}

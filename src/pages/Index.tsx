@@ -140,16 +140,23 @@ export default function Index() {
       <PointsToast points={lastPointsEarned} />
 
       {/* Header with profile, streak and theme toggle */}
-      <header className="pt-6 pb-4 px-4 flex items-center justify-between">
+      <header className="pt-6 pb-4 px-4 flex items-center justify-between relative z-10">
         <button
           type="button"
           onClick={() => {
             console.log('Avatar button clicked');
             setShowAvatarSelector(true);
           }}
-          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-3 hover:opacity-80 transition-all duration-300"
         >
-          <div className="w-10 h-10 rounded-xl bg-card shadow-sm flex items-center justify-center overflow-hidden border border-border">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden border backdrop-blur-sm transition-all duration-300"
+            style={{
+              background: 'hsl(var(--card) / 0.6)',
+              borderColor: 'hsl(var(--border) / 0.5)',
+              boxShadow: '0 2px 10px hsl(var(--background) / 0.3), inset 0 1px 0 hsl(255 255 255 / 0.05)'
+            }}
+          >
             {avatarSrc ? (
               <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
@@ -164,22 +171,38 @@ export default function Index() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setActiveTab('room')}
-            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-sm ${
-              activeTab === 'room'
-                ? 'bg-foreground text-background'
-                : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-            }`}
+            className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 border backdrop-blur-sm"
+            style={{
+              background: activeTab === 'room'
+                ? 'hsl(var(--foreground))'
+                : 'hsl(var(--card) / 0.6)',
+              color: activeTab === 'room'
+                ? 'hsl(var(--background))'
+                : 'hsl(var(--muted-foreground))',
+              borderColor: activeTab === 'room'
+                ? 'hsl(var(--foreground))'
+                : 'hsl(var(--border) / 0.5)',
+              boxShadow: '0 2px 10px hsl(var(--background) / 0.3), inset 0 1px 0 hsl(255 255 255 / 0.05)'
+            }}
           >
             <Home className="w-4 h-4" />
           </button>
           <ThemeToggle />
           <button
             onClick={() => setActiveTab('settings')}
-            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-sm ${
-              activeTab === 'settings'
-                ? 'bg-foreground text-background'
-                : 'bg-card border border-border text-muted-foreground hover:text-foreground'
-            }`}
+            className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 border backdrop-blur-sm"
+            style={{
+              background: activeTab === 'settings'
+                ? 'hsl(var(--foreground))'
+                : 'hsl(var(--card) / 0.6)',
+              color: activeTab === 'settings'
+                ? 'hsl(var(--background))'
+                : 'hsl(var(--muted-foreground))',
+              borderColor: activeTab === 'settings'
+                ? 'hsl(var(--foreground))'
+                : 'hsl(var(--border) / 0.5)',
+              boxShadow: '0 2px 10px hsl(var(--background) / 0.3), inset 0 1px 0 hsl(255 255 255 / 0.05)'
+            }}
           >
             <Settings className="w-4 h-4" />
           </button>
@@ -228,10 +251,15 @@ export default function Index() {
           {activeTask && (
             <button
               onClick={() => setShowTaskDetail(true)}
-              className="mb-6 px-5 py-2.5 rounded-xl bg-card border border-border text-muted-foreground text-sm flex items-center gap-2 hover:bg-muted hover:text-foreground transition-all shadow-sm"
+              className="mb-6 px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 transition-all duration-300 border backdrop-blur-sm hover:scale-105"
+              style={{
+                background: 'hsl(var(--card) / 0.6)',
+                borderColor: 'hsl(var(--border) / 0.5)',
+                boxShadow: '0 4px 16px hsl(var(--background) / 0.3), inset 0 1px 0 hsl(255 255 255 / 0.05)'
+              }}
             >
               <span className="text-base">📝</span>
-              <span className="font-medium">
+              <span className="font-medium text-foreground">
                 {activeTask.notes ? 'View Notes' : 'Add Notes'}
               </span>
             </button>
@@ -244,9 +272,11 @@ export default function Index() {
                 isPlaying={music.isPlaying}
                 isMusicEnabled={music.isMusicEnabled}
                 volume={music.volume}
+                autoplayBlocked={music.autoplayBlocked}
                 onToggleMusic={music.toggleMusic}
                 onSkipTrack={music.skipTrack}
                 onVolumeChange={music.updateVolume}
+                onRetryPlay={music.retryPlay}
               />
             </div>
           )}

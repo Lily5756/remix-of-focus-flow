@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { MoodTheme } from '@/hooks/useMoodTheme';
 
@@ -17,6 +17,14 @@ interface Particle {
   opacity: number;
 }
 
+interface ShootingStar {
+  id: number;
+  startX: number;
+  startY: number;
+  duration: number;
+  delay: number;
+}
+
 function generateParticles(count: number): Particle[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
@@ -26,6 +34,16 @@ function generateParticles(count: number): Particle[] {
     duration: Math.random() * 25 + 20,
     delay: Math.random() * 10,
     opacity: Math.random() * 0.5 + 0.2,
+  }));
+}
+
+function generateShootingStars(count: number): ShootingStar[] {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    startX: Math.random() * 60,
+    startY: Math.random() * 40,
+    duration: Math.random() * 1.5 + 0.8,
+    delay: Math.random() * 8,
   }));
 }
 
@@ -128,64 +146,130 @@ function LockedInPulse({ isActive }: { isActive?: boolean }) {
   );
 }
 
-// Fresh Mode: Glass morphism bubbles with iridescent effect
+// Fresh Mode: Premium dark space theme with shooting stars
 function FreshBubbles() {
-  const bubbles = useMemo(() => generateParticles(10), []);
+  const stars = useMemo(() => generateParticles(30), []);
+  const shootingStars = useMemo(() => generateShootingStars(5), []);
+  const [activeShootingStars, setActiveShootingStars] = useState<ShootingStar[]>([]);
+
+  // Periodically trigger shooting stars
+  useEffect(() => {
+    const triggerShootingStar = () => {
+      const star = {
+        id: Date.now(),
+        startX: Math.random() * 50 + 10,
+        startY: Math.random() * 30,
+        duration: Math.random() * 1 + 0.5,
+        delay: 0,
+      };
+      setActiveShootingStars(prev => [...prev, star]);
+
+      // Remove after animation
+      setTimeout(() => {
+        setActiveShootingStars(prev => prev.filter(s => s.id !== star.id));
+      }, star.duration * 1000 + 500);
+    };
+
+    // Initial shooting stars
+    shootingStars.forEach((star, i) => {
+      setTimeout(() => triggerShootingStar(), star.delay * 1000);
+    });
+
+    // Periodic shooting stars
+    const interval = setInterval(() => {
+      if (Math.random() > 0.6) {
+        triggerShootingStar();
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Soft gradient waves */}
+      {/* Deep space nebula gradients */}
       <div
-        className="absolute inset-0 animate-gradient-flow"
+        className="absolute inset-0 animate-nebula"
         style={{
           background: `
-            radial-gradient(ellipse 100% 60% at 10% 90%, hsl(175 50% 60% / 0.06) 0%, transparent 50%),
-            radial-gradient(ellipse 80% 50% at 90% 20%, hsl(200 60% 65% / 0.05) 0%, transparent 50%)
+            radial-gradient(ellipse 80% 50% at 20% 30%, hsl(175 60% 30% / 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 40% at 80% 70%, hsl(200 50% 25% / 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse 50% 30% at 50% 50%, hsl(185 40% 20% / 0.04) 0%, transparent 60%)
           `,
         }}
       />
-      {/* Glass bubbles rising */}
-      {bubbles.map((p) => (
+
+      {/* Distant stars */}
+      {stars.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full animate-rise-float backdrop-blur-[1px]"
+          className="absolute rounded-full animate-star-twinkle"
           style={{
             left: `${p.x}%`,
-            bottom: `-${p.size * 5}px`,
-            width: `${p.size * 5}px`,
-            height: `${p.size * 5}px`,
-            background: `
-              radial-gradient(circle at 30% 30%, hsl(180 60% 90% / ${p.opacity * 0.4}) 0%, transparent 50%),
-              radial-gradient(circle at 70% 70%, hsl(200 50% 80% / ${p.opacity * 0.2}) 0%, transparent 50%),
-              linear-gradient(135deg, hsl(175 50% 70% / ${p.opacity * 0.15}) 0%, hsl(195 60% 60% / ${p.opacity * 0.1}) 100%)
-            `,
-            border: `1px solid hsl(180 40% 70% / ${p.opacity * 0.3})`,
-            boxShadow: `
-              inset 0 0 ${p.size * 2}px hsl(180 50% 90% / 0.2),
-              0 0 ${p.size * 3}px hsl(185 50% 60% / ${p.opacity * 0.2})
-            `,
-            animationDuration: `${p.duration}s`,
+            top: `${p.y}%`,
+            width: `${p.size * 0.4}px`,
+            height: `${p.size * 0.4}px`,
+            background: `radial-gradient(circle, hsl(175 50% 90%) 0%, hsl(180 40% 70% / 0.5) 50%, transparent 100%)`,
+            boxShadow: `0 0 ${p.size}px hsl(175 60% 70% / ${p.opacity * 0.5})`,
+            animationDuration: `${p.duration * 0.3}s`,
             animationDelay: `${p.delay}s`,
           }}
         />
       ))}
-      {/* Floating light specks */}
-      {bubbles.slice(0, 5).map((p) => (
+
+      {/* Shooting stars */}
+      {activeShootingStars.map((star) => (
         <div
-          key={`speck-${p.id}`}
-          className="absolute rounded-full animate-drift"
+          key={star.id}
+          className="absolute animate-shooting-star"
           style={{
-            left: `${(p.x + 40) % 100}%`,
-            top: `${p.y}%`,
-            width: '4px',
-            height: '4px',
-            background: 'radial-gradient(circle, hsl(180 70% 85%) 0%, transparent 100%)',
-            boxShadow: '0 0 10px 3px hsl(180 60% 70% / 0.3)',
-            animationDuration: `${p.duration * 0.6}s`,
-            animationDelay: `${p.delay + 2}s`,
+            left: `${star.startX}%`,
+            top: `${star.startY}%`,
+            width: '100px',
+            height: '2px',
+            background: 'linear-gradient(90deg, hsl(175 80% 70%), hsl(175 60% 50% / 0.5), transparent)',
+            borderRadius: '2px',
+            boxShadow: '0 0 10px hsl(175 70% 60% / 0.6), 0 0 20px hsl(175 60% 50% / 0.3)',
+            animationDuration: `${star.duration}s`,
           }}
         />
       ))}
+
+      {/* Floating cyan particles */}
+      {stars.slice(0, 8).map((p) => (
+        <div
+          key={`particle-${p.id}`}
+          className="absolute rounded-full animate-drift"
+          style={{
+            left: `${(p.x + 30) % 100}%`,
+            top: `${(p.y + 20) % 100}%`,
+            width: `${p.size * 1.5}px`,
+            height: `${p.size * 1.5}px`,
+            background: `radial-gradient(circle, hsl(175 70% 60% / ${p.opacity * 0.4}) 0%, transparent 70%)`,
+            boxShadow: `0 0 ${p.size * 2}px hsl(175 60% 50% / ${p.opacity * 0.3})`,
+            animationDuration: `${p.duration * 0.8}s`,
+            animationDelay: `${p.delay + 1}s`,
+          }}
+        />
+      ))}
+
+      {/* Ambient glow orbs */}
+      <div
+        className="absolute w-96 h-96 rounded-full blur-3xl opacity-20"
+        style={{
+          left: '10%',
+          top: '20%',
+          background: 'radial-gradient(circle, hsl(175 60% 40%) 0%, transparent 70%)',
+        }}
+      />
+      <div
+        className="absolute w-80 h-80 rounded-full blur-3xl opacity-15"
+        style={{
+          right: '5%',
+          bottom: '30%',
+          background: 'radial-gradient(circle, hsl(195 50% 35%) 0%, transparent 70%)',
+        }}
+      />
     </div>
   );
 }

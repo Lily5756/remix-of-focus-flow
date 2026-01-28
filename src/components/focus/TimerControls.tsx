@@ -33,12 +33,20 @@ export function TimerControls({
           onClick={onStart}
           disabled={!hasActiveTask}
           className={cn(
-            "w-16 h-16 rounded-2xl flex items-center justify-center transition-all",
+            "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300",
             "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             hasActiveTask
-              ? "bg-foreground text-background hover:opacity-90 active:scale-95 shadow-lg"
-              : "bg-muted text-muted-foreground cursor-not-allowed"
+              ? "hover:scale-105 active:scale-95"
+              : "cursor-not-allowed opacity-50"
           )}
+          style={hasActiveTask ? {
+            background: 'linear-gradient(135deg, hsl(var(--timer-accent)) 0%, hsl(var(--timer-accent) / 0.8) 100%)',
+            color: 'white',
+            boxShadow: '0 8px 24px hsl(var(--timer-accent) / 0.4), inset 0 1px 0 hsl(255 255 255 / 0.2)'
+          } : {
+            background: 'hsl(var(--muted))',
+            color: 'hsl(var(--muted-foreground))'
+          }}
         >
           <Play className="w-7 h-7 ml-1" fill="currentColor" />
         </button>
@@ -48,13 +56,25 @@ export function TimerControls({
         <>
           <button
             onClick={onStop}
-            className="w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center hover:opacity-90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
+            className="w-14 h-14 rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring border backdrop-blur-sm"
+            style={{
+              background: 'hsl(var(--card) / 0.8)',
+              borderColor: 'hsl(var(--border) / 0.5)',
+              color: 'hsl(var(--foreground))',
+              boxShadow: '0 4px 16px hsl(var(--background) / 0.4), inset 0 1px 0 hsl(255 255 255 / 0.05)'
+            }}
           >
             <Square className="w-5 h-5" fill="currentColor" />
           </button>
           <button
             onClick={onPause}
-            className="w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center hover:opacity-90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
+            className="w-14 h-14 rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring border backdrop-blur-sm"
+            style={{
+              background: 'hsl(var(--card) / 0.8)',
+              borderColor: 'hsl(var(--border) / 0.5)',
+              color: 'hsl(var(--foreground))',
+              boxShadow: '0 4px 16px hsl(var(--background) / 0.4), inset 0 1px 0 hsl(255 255 255 / 0.05)'
+            }}
           >
             <Pause className="w-5 h-5" fill="currentColor" />
           </button>
@@ -65,13 +85,24 @@ export function TimerControls({
         <>
           <button
             onClick={onStop}
-            className="w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center hover:opacity-90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
+            className="w-14 h-14 rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring border backdrop-blur-sm"
+            style={{
+              background: 'hsl(var(--card) / 0.8)',
+              borderColor: 'hsl(var(--border) / 0.5)',
+              color: 'hsl(var(--foreground))',
+              boxShadow: '0 4px 16px hsl(var(--background) / 0.4), inset 0 1px 0 hsl(255 255 255 / 0.05)'
+            }}
           >
             <Square className="w-5 h-5" fill="currentColor" />
           </button>
           <button
             onClick={onResume}
-            className="w-14 h-14 rounded-2xl bg-foreground text-background flex items-center justify-center hover:opacity-90 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
+            className="w-14 h-14 rounded-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            style={{
+              background: 'linear-gradient(135deg, hsl(var(--timer-accent)) 0%, hsl(var(--timer-accent) / 0.8) 100%)',
+              color: 'white',
+              boxShadow: '0 8px 24px hsl(var(--timer-accent) / 0.4), inset 0 1px 0 hsl(255 255 255 / 0.2)'
+            }}
           >
             <Play className="w-5 h-5 ml-0.5" fill="currentColor" />
           </button>
@@ -81,7 +112,13 @@ export function TimerControls({
       {isBreak && (
         <button
           onClick={onSkipBreak}
-          className="px-6 py-3 rounded-2xl bg-muted text-muted-foreground flex items-center gap-2 hover:bg-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-sm"
+          className="px-6 py-3 rounded-2xl flex items-center gap-2 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring border backdrop-blur-sm hover:scale-105 active:scale-95"
+          style={{
+            background: 'hsl(var(--card) / 0.6)',
+            borderColor: 'hsl(var(--border) / 0.5)',
+            color: 'hsl(var(--muted-foreground))',
+            boxShadow: '0 4px 16px hsl(var(--background) / 0.3), inset 0 1px 0 hsl(255 255 255 / 0.05)'
+          }}
         >
           <SkipForward className="w-4 h-4" />
           <span className="text-sm font-medium">Skip break</span>

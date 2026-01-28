@@ -42,5 +42,5 @@ export interface StreakData {
 
 export type TimerState = 'idle' | 'focus' | 'paused' | 'break';
 
-export const FOCUS_DURATIONS = [0.17, 5, 25, 30, 45] as const; // 0.17 = ~10 seconds for testing
+export const FOCUS_DURATIONS = [5, 25, 30, 40] as const;
 export const BREAK_DURATION = 5;

@@ -34,8 +34,8 @@ export function useNotification() {
     }
 
     return new Notification(title, {
-      icon: '/calmodoro.png',
-      badge: '/calmodoro_box.png',
+      icon: `${import.meta.env.BASE_URL}calmodoro.png`,
+      badge: `${import.meta.env.BASE_URL}calmodoro_box.png`,
       ...options,
     });
   }, []);

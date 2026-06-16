@@ -1,7 +1,7 @@
 import { Timer, Music, Calendar, BarChart3, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export type Tab = 'focus' | 'tasks' | 'room' | 'calendar' | 'report' | 'settings';
+export type Tab = 'focus' | 'tasks' | 'calendar' | 'report' | 'settings';
 
 interface TabNavigationProps {
   activeTab: Tab;
@@ -38,7 +38,7 @@ export function TabNavigation({ activeTab, onTabChange, timerDisplay, isTimerAct
           <div className="flex items-center gap-1">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id ||
-                (tab.id === 'focus' && ['room', 'settings'].includes(activeTab));
+                (tab.id === 'focus' && activeTab === 'settings');
 
               return (
                 <button

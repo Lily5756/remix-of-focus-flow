@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User, Home, Settings } from 'lucide-react';
+import { User, Settings } from 'lucide-react';
 import { useFocusApp } from '@/hooks/useFocusApp';
 import { useFocusMusic } from '@/hooks/useFocusMusic';
 import { useMoodTheme } from '@/hooks/useMoodTheme';
@@ -23,8 +23,6 @@ import { AmbientEffects } from '@/components/focus/AmbientEffects';
 import { TaskDetailModal } from '@/components/focus/TaskDetailModal';
 import { AvatarSelector, getAvatarSrc } from '@/components/focus/AvatarSelector';
 import { MilestoneCelebration } from '@/components/focus/MilestoneCelebration';
-import { RoomView } from '@/components/focus/RoomView';
-import { PointsToast } from '@/components/focus/PointsToast';
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('focus');
@@ -66,8 +64,6 @@ export default function Index() {
     setUserName,
     setAvatarId,
     setCustomAvatar,
-    lastPointsEarned,
-    roomBuilder,
     syncStatus,
     syncNow,
     restoreFromCloud,
@@ -136,9 +132,6 @@ export default function Index() {
       {/* Milestone celebration */}
       <MilestoneCelebration message={milestoneMessage} />
 
-      {/* Points earned toast */}
-      <PointsToast points={lastPointsEarned} />
-
       {/* Header with profile, streak and theme toggle */}
       <header className="pt-6 pb-4 px-4 flex items-center justify-between relative z-10">
         <button
@@ -169,24 +162,6 @@ export default function Index() {
         </button>
         <StreakDisplay streakData={streakData} />
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setActiveTab('room')}
-            className="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 border backdrop-blur-sm"
-            style={{
-              background: activeTab === 'room'
-                ? 'hsl(var(--foreground))'
-                : 'hsl(var(--card) / 0.6)',
-              color: activeTab === 'room'
-                ? 'hsl(var(--background))'
-                : 'hsl(var(--muted-foreground))',
-              borderColor: activeTab === 'room'
-                ? 'hsl(var(--foreground))'
-                : 'hsl(var(--border) / 0.5)',
-              boxShadow: '0 2px 10px hsl(var(--background) / 0.3), inset 0 1px 0 hsl(255 255 255 / 0.05)'
-            }}
-          >
-            <Home className="w-4 h-4" />
-          </button>
           <ThemeToggle />
           <button
             onClick={() => setActiveTab('settings')}
@@ -309,30 +284,6 @@ export default function Index() {
       {activeTab === 'calendar' && (
         <main className="flex-1 flex flex-col px-2 pb-24">
           <CalendarView />
-        </main>
-      )}
-
-      {activeTab === 'room' && (
-        <main className="flex-1 flex flex-col pb-24">
-          <RoomView
-            roomName={roomBuilder.roomName}
-            onRoomNameChange={roomBuilder.setRoomName}
-            focusPoints={roomBuilder.focusPoints}
-            totalCompletedPomodoros={roomBuilder.totalCompletedPomodoros}
-            longestStreak={streakData.longestStreak}
-            ownedItems={roomBuilder.ownedItems}
-            placedItems={roomBuilder.placedItems}
-            unplacedOwnedItems={roomBuilder.unplacedOwnedItems}
-            isTimerActive={isTimerActive}
-            appUrl="https://calmodoro.lovable.app"
-            onPurchase={roomBuilder.purchaseItem}
-            onPlaceItem={roomBuilder.placeItem}
-            onRemoveItem={roomBuilder.removeItemFromGrid}
-            isItemUnlocked={roomBuilder.isItemUnlocked}
-            ownsItem={roomBuilder.ownsItem}
-            onClaimReward={roomBuilder.claimSharingReward}
-            hasClaimedReward={roomBuilder.hasClaimedReward}
-          />
         </main>
       )}
 

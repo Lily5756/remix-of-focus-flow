@@ -4,11 +4,9 @@ import { useTimer } from './useTimer';
 import { useSound } from './useSound';
 import { useNotification } from './useNotification';
 import { useStreakCelebration, getMilestoneMessage, STREAK_MILESTONES } from './useStreakCelebration';
-import { useRoomBuilder } from './useRoomBuilder';
 import { useCloudSync, CloudData } from './useCloudSync';
 import { useAuth } from './useAuth';
 import { Task, FocusSession, UserPreferences, StreakData, FOCUS_DURATIONS } from '@/types/focus';
-import { PointsEarned, RoomState, WELCOME_BONUS } from '@/types/room';
 
 const getToday = () => new Date().toISOString().split('T')[0];
 
@@ -46,12 +44,10 @@ export function useFocusApp() {
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [encouragement, setEncouragement] = useState<string | null>(null);
   const [milestoneMessage, setMilestoneMessage] = useState<string | null>(null);
-  const [lastPointsEarned, setLastPointsEarned] = useState<PointsEarned | null>(null);
-  
+
   const { playChime } = useSound();
   const { notify, requestPermission } = useNotification();
   const { celebrate } = useStreakCelebration();
-  const roomBuilder = useRoomBuilder();
   const { user, isAuthenticated } = useAuth();
 
   // Cloud sync - restore data when user logs in
@@ -81,25 +77,15 @@ export function useFocusApp() {
     sessions,
     preferences,
     streakData,
-    roomState: {
-      roomName: roomBuilder.roomName,
-      focusPoints: roomBuilder.focusPoints,
-      lifetimeFocusPoints: roomBuilder.lifetimeFocusPoints,
-      totalCompletedPomodoros: roomBuilder.totalCompletedPomodoros,
-      ownedItems: roomBuilder.ownedItems,
-      placedItems: roomBuilder.placedItems,
-      hasClaimedWelcomeBonus: true,
-      claimedRewards: roomBuilder.claimedRewards,
-    },
     updatedAt: new Date().toISOString(),
-  }), [tasks, sessions, preferences, streakData, roomBuilder]);
+  }), [tasks, sessions, preferences, streakData]);
 
   // Auto-sync when authenticated and data changes
   useEffect(() => {
     if (isAuthenticated && user) {
       cloudSync.debouncedSync(buildSyncData());
     }
-  }, [tasks, sessions, preferences, streakData, roomBuilder.focusPoints, roomBuilder.ownedItems, roomBuilder.placedItems, isAuthenticated, user]);
+  }, [tasks, sessions, preferences, streakData, isAuthenticated, user]);
 
   // Check and restore cloud data on login
   useEffect(() => {
@@ -236,15 +222,9 @@ export function useFocusApp() {
 
   const submitReflection = useCallback((answer: 'yes' | 'no') => {
     if (!currentSessionId) return;
-    
+
     const today = getToday();
-    const didReflect = answer === 'yes';
-    
-    // Award Focus Points
-    const pointsEarned = roomBuilder.awardPoints(didReflect);
-    setLastPointsEarned(pointsEarned);
-    setTimeout(() => setLastPointsEarned(null), 4000);
-    
+
     // Update session with reflection
     setSessions(prev => prev.map(s => 
       s.id === currentSessionId 
@@ -333,18 +313,13 @@ export function useFocusApp() {
     setShowReflection(false);
     setCurrentSessionId(null);
     timer.startBreak();
-  }, [currentSessionId, activeTaskId, selectedDuration, setSessions, setTasks, setPreferences, setStreakData, timer, celebrate, roomBuilder]);
+  }, [currentSessionId, activeTaskId, selectedDuration, setSessions, setTasks, setPreferences, setStreakData, timer, celebrate]);
 
   const skipReflection = useCallback(() => {
-    // Award points even when skipping (no reflection bonus)
-    const pointsEarned = roomBuilder.awardPoints(false);
-    setLastPointsEarned(pointsEarned);
-    setTimeout(() => setLastPointsEarned(null), 4000);
-    
     setShowReflection(false);
     setCurrentSessionId(null);
     timer.startBreak();
-  }, [timer, roomBuilder]);
+  }, [timer]);
 
   const endSession = useCallback(() => {
     timer.stop();
@@ -391,11 +366,7 @@ export function useFocusApp() {
     userName,
     avatarId,
     customAvatar,
-    lastPointsEarned,
-    
-    // Room Builder
-    roomBuilder,
-    
+
     // Cloud Sync
     syncStatus: cloudSync.syncStatus,
     syncNow,

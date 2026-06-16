@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { Task, FocusSession, UserPreferences, StreakData } from '@/types/focus';
-import { RoomState, WELCOME_BONUS } from '@/types/room';
 import { toast } from '@/hooks/use-toast';
 import type { Json } from '@/integrations/supabase/types';
 
@@ -11,7 +10,6 @@ export interface CloudData {
   sessions: FocusSession[];
   preferences: UserPreferences;
   streakData: StreakData;
-  roomState: RoomState;
   updatedAt: string;
 }
 
@@ -40,17 +38,6 @@ const DEFAULT_STREAK_DATA: StreakData = {
   longestStreak: 0,
   lastStreakDate: '',
   todaySessionCount: 0,
-};
-
-const DEFAULT_ROOM_STATE: RoomState = {
-  roomName: 'My Cozy Room',
-  focusPoints: WELCOME_BONUS,
-  lifetimeFocusPoints: WELCOME_BONUS,
-  totalCompletedPomodoros: 0,
-  ownedItems: [],
-  placedItems: [],
-  hasClaimedWelcomeBonus: true,
-  claimedRewards: [],
 };
 
 export function useCloudSync(options?: UseCloudSyncOptions) {
@@ -114,7 +101,6 @@ export function useCloudSync(options?: UseCloudSyncOptions) {
         sessions: JSON.parse(JSON.stringify(data.sessions)) as Json,
         preferences: JSON.parse(JSON.stringify(data.preferences)) as Json,
         streak_data: JSON.parse(JSON.stringify(data.streakData)) as Json,
-        room_state: JSON.parse(JSON.stringify(data.roomState)) as Json,
         last_synced_at: new Date().toISOString(),
       };
 
@@ -202,9 +188,6 @@ export function useCloudSync(options?: UseCloudSyncOptions) {
           streakData: data.streak_data && typeof data.streak_data === 'object' && !Array.isArray(data.streak_data)
             ? { ...DEFAULT_STREAK_DATA, ...(data.streak_data as object) } as StreakData
             : DEFAULT_STREAK_DATA,
-          roomState: data.room_state && typeof data.room_state === 'object' && !Array.isArray(data.room_state)
-            ? { ...DEFAULT_ROOM_STATE, ...(data.room_state as object) } as RoomState
-            : DEFAULT_ROOM_STATE,
           updatedAt: data.updated_at,
         };
 

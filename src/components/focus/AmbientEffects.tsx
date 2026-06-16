@@ -146,10 +146,10 @@ function LockedInPulse({ isActive }: { isActive?: boolean }) {
   );
 }
 
-// Fresh Mode: Premium dark space theme with shooting stars
+// Fresh Mode: Warm cozy theme with gentle floating particles
 function FreshBubbles() {
-  const stars = useMemo(() => generateParticles(30), []);
-  const shootingStars = useMemo(() => generateShootingStars(5), []);
+  const stars = useMemo(() => generateParticles(25), []);
+  const shootingStars = useMemo(() => generateShootingStars(3), []);
   const [activeShootingStars, setActiveShootingStars] = useState<ShootingStar[]>([]);
 
   // Periodically trigger shooting stars
@@ -159,7 +159,7 @@ function FreshBubbles() {
         id: Date.now(),
         startX: Math.random() * 50 + 10,
         startY: Math.random() * 30,
-        duration: Math.random() * 1 + 0.5,
+        duration: Math.random() * 1.2 + 0.6,
         delay: 0,
       };
       setActiveShootingStars(prev => [...prev, star]);
@@ -175,31 +175,31 @@ function FreshBubbles() {
       setTimeout(() => triggerShootingStar(), star.delay * 1000);
     });
 
-    // Periodic shooting stars
+    // Periodic shooting stars (less frequent for cozier feel)
     const interval = setInterval(() => {
-      if (Math.random() > 0.6) {
+      if (Math.random() > 0.7) {
         triggerShootingStar();
       }
-    }, 3000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Deep space nebula gradients */}
+      {/* Warm nebula gradients */}
       <div
         className="absolute inset-0 animate-nebula"
         style={{
           background: `
-            radial-gradient(ellipse 80% 50% at 20% 30%, hsl(175 60% 30% / 0.08) 0%, transparent 50%),
-            radial-gradient(ellipse 60% 40% at 80% 70%, hsl(200 50% 25% / 0.06) 0%, transparent 50%),
-            radial-gradient(ellipse 50% 30% at 50% 50%, hsl(185 40% 20% / 0.04) 0%, transparent 60%)
+            radial-gradient(ellipse 80% 50% at 20% 30%, hsl(12 60% 35% / 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse 60% 40% at 80% 70%, hsl(25 50% 30% / 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse 50% 30% at 50% 50%, hsl(15 45% 25% / 0.04) 0%, transparent 60%)
           `,
         }}
       />
 
-      {/* Distant stars */}
+      {/* Soft glowing particles */}
       {stars.map((p) => (
         <div
           key={p.id}
@@ -207,17 +207,17 @@ function FreshBubbles() {
           style={{
             left: `${p.x}%`,
             top: `${p.y}%`,
-            width: `${p.size * 0.4}px`,
-            height: `${p.size * 0.4}px`,
-            background: `radial-gradient(circle, hsl(175 50% 90%) 0%, hsl(180 40% 70% / 0.5) 50%, transparent 100%)`,
-            boxShadow: `0 0 ${p.size}px hsl(175 60% 70% / ${p.opacity * 0.5})`,
-            animationDuration: `${p.duration * 0.3}s`,
+            width: `${p.size * 0.5}px`,
+            height: `${p.size * 0.5}px`,
+            background: `radial-gradient(circle, hsl(30 60% 90%) 0%, hsl(20 50% 75% / 0.5) 50%, transparent 100%)`,
+            boxShadow: `0 0 ${p.size}px hsl(12 60% 70% / ${p.opacity * 0.4})`,
+            animationDuration: `${p.duration * 0.35}s`,
             animationDelay: `${p.delay}s`,
           }}
         />
       ))}
 
-      {/* Shooting stars */}
+      {/* Shooting stars with warm coral trail */}
       {activeShootingStars.map((star) => (
         <div
           key={star.id}
@@ -225,49 +225,49 @@ function FreshBubbles() {
           style={{
             left: `${star.startX}%`,
             top: `${star.startY}%`,
-            width: '100px',
+            width: '80px',
             height: '2px',
-            background: 'linear-gradient(90deg, hsl(175 80% 70%), hsl(175 60% 50% / 0.5), transparent)',
+            background: 'linear-gradient(90deg, hsl(12 80% 70%), hsl(20 60% 55% / 0.5), transparent)',
             borderRadius: '2px',
-            boxShadow: '0 0 10px hsl(175 70% 60% / 0.6), 0 0 20px hsl(175 60% 50% / 0.3)',
+            boxShadow: '0 0 8px hsl(12 70% 60% / 0.5), 0 0 16px hsl(15 60% 50% / 0.25)',
             animationDuration: `${star.duration}s`,
           }}
         />
       ))}
 
-      {/* Floating cyan particles */}
-      {stars.slice(0, 8).map((p) => (
+      {/* Floating coral particles */}
+      {stars.slice(0, 6).map((p) => (
         <div
           key={`particle-${p.id}`}
           className="absolute rounded-full animate-drift"
           style={{
             left: `${(p.x + 30) % 100}%`,
             top: `${(p.y + 20) % 100}%`,
-            width: `${p.size * 1.5}px`,
-            height: `${p.size * 1.5}px`,
-            background: `radial-gradient(circle, hsl(175 70% 60% / ${p.opacity * 0.4}) 0%, transparent 70%)`,
-            boxShadow: `0 0 ${p.size * 2}px hsl(175 60% 50% / ${p.opacity * 0.3})`,
-            animationDuration: `${p.duration * 0.8}s`,
+            width: `${p.size * 1.8}px`,
+            height: `${p.size * 1.8}px`,
+            background: `radial-gradient(circle, hsl(12 65% 60% / ${p.opacity * 0.35}) 0%, transparent 70%)`,
+            boxShadow: `0 0 ${p.size * 2}px hsl(15 55% 50% / ${p.opacity * 0.25})`,
+            animationDuration: `${p.duration * 0.9}s`,
             animationDelay: `${p.delay + 1}s`,
           }}
         />
       ))}
 
-      {/* Ambient glow orbs */}
+      {/* Ambient warm glow orbs */}
       <div
-        className="absolute w-96 h-96 rounded-full blur-3xl opacity-20"
+        className="absolute w-96 h-96 rounded-full blur-3xl opacity-15"
         style={{
           left: '10%',
           top: '20%',
-          background: 'radial-gradient(circle, hsl(175 60% 40%) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, hsl(12 55% 45%) 0%, transparent 70%)',
         }}
       />
       <div
-        className="absolute w-80 h-80 rounded-full blur-3xl opacity-15"
+        className="absolute w-80 h-80 rounded-full blur-3xl opacity-12"
         style={{
           right: '5%',
           bottom: '30%',
-          background: 'radial-gradient(circle, hsl(195 50% 35%) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, hsl(25 45% 40%) 0%, transparent 70%)',
         }}
       />
     </div>
